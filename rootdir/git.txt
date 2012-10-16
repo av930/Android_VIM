@@ -1,0 +1,36 @@
+
+-GingerBread Native
+repo init -u ssh://android.git.kernel.org/platform/manifest.git -b ginberbread
+repo sync
+repo start cappuccino_refactoring --all
+
+
+-GingerBread LAP
+repo init -u ssh://165.243.137.39:29475/platform/manifest.git -b cappuccino_refactoring
+repo sync
+repo start cappuccino_refactoring --all
+
+
+-Froyo native
+repo init -u ssh://10.175.203.7:29425/platform/manifest.git -b froyo
+repo sync
+repo start froyo --all
+
+
+-allFroyo Cappuccino
+repo init -u ssh://10.175.203.7:29425/platform/manifest.git -b froyo-capu
+repo sync
+repo start froyo-capu --all
+git push lge-cappuccino HEAD:refs/for/froyo-capu
+
+
+-Froyo_AnB
+repo init -u ssh://10.175.203.7:29418/manifest.git -b froyo-lge-qct
+repo sync
+repo start froyo-lge-qct --all
+
+
+register kernel
+git clone ssh://10.175.201.21:29418/kernel/msm.git
+git checkout -b 7x27_common-2.6.32 origin/7x27_common-2.6.32
+rename msm dir to kernel

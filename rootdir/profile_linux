@@ -1,0 +1,10 @@
+############################## USER DEFINE ################################
+
+export LANG=C.euckr
+export LC_ALL=C
+export LC_CTYPE=C
+
+
+PATH=".:$PATH"
+
+echo "[NOTICE] .profile is executed"

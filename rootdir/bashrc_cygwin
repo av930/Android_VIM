@@ -1,0 +1,303 @@
+############################### USER DEFINE #####################################
+alias ls='ls -F --color=auto --show-control-chars'
+alias grep='grep --color=auto'
+alias env='env|sort'
+alias dir='ls -al -F --color=auto| grep /'
+
+
+#------------------------------ cygwin -----------------------------------------
+alias nt='rxvt -rv -sr -sw -sl 9999 -fg black -bg white -fn "Lucida Sans Typewriter" -mcc -ls -g 100X50 -e /usr/bin/bash --login -i &'
+alias ue='c:/DevTools/UltraEdit/uedit32.exe'
+alias np='c:/DevTools/Notepad++/notepad++.exe'
+
+############################### DIR ALIAS #####################################
+alias code='cd D:/code_study'
+alias dev='cd c:/DevTools'
+alias src='cd D:/SRC_WORK'
+alias sdk='cd $SRC_SDK'
+alias setting='cd D:/Setting/Setting_Program'
+alias home='cd c:/Users/joongkeun.kim/'
+
+############################### Tool ALIAS #####################################
+alias updateDonut='rsync -auvht --port=873 172.21.74.32::$USER/mydonut/* \
+    /cygdrive/d/SRC_WORK/Donut/'
+alias updateEclair='rsync -auvht --port=873 172.21.74.32::$USER/myeclair/* \
+    /cygdrive/d/SRC_WORK/Eclair/'
+alias updateCapp='rsync -auvht --exclude-from=exclude.txt \
+    --port=873 172.21.74.32::$USER/capp/* /cygdrive/d/SRC_WORK/capp/'
+alias puttyCom='nohup putty -load "CompileServer" &'
+alias puttyFile='nohup putty -lddaoad "FileServer" &'
+alias solar='ssh $SOLAR'
+
+########### SDK ############
+alias show_path='echo $PATH|sed "s/:/:\n/g"'
+
+function set_ics(){
+    export PATH=${SRC_SDK}/platform-tools:${SRC_SDK}/tools:$PATH;
+    export ANDROID_PRODUCT_OUT=${SRC_FULL}/out/target/product/generic
+    export USE_CYGWIN=1 #refer HOST_windows-x86.mk for cygwin building 
+
+}
+alias set_fro='export PATH=${SRC_SDK}10/platform-tools:${SRC_SDK}10/tools:$PATH'
+
+############################### SOURCE DEFINE ######################################
+function launch_cur_dir()
+{
+    cygpath -wp $PWD
+}
+
+#---------------------------------ETC ----------------------------------#
+########### Debugger setting ############
+alias xming='export DISPLAY=localhost:0.0'
+function setup_gdb()
+{
+    adb devices
+    echo "only 1 device: enter, more than 1: -e or -d"
+    read choice
+    adb $choice forward tcp:5050 tcp:5050
+    adb $choice shell ps
+    echo -n "Which process?:"
+    read process_id
+    adb $choice shell gdbserver :5050 --attach $process_id
+}
+
+########### lint setting ############
+alias set_lint='LARCH_PATH=$DEVTOOLS/GnuTool/SPLint/lib;
+                LCLIMPORTDIR=$DEVTOOLS/GnuTool/SPLint/imports;
+                PATH=$DEVTOOLS/GnuTool/SPLint/bin:$PATH'
+
+
+########### EXECUTE  ############
+echo "set android sdk path"; set_ics
+
+########### OLD  ############
+#alias kh='. env_ads101; cd $SAVE_SRC/KH5000/SRC/Q/dmss'
+#alias adi='. env_RVDS;cd $SRC_GSM/ADI/TTPCom/Source_tplgsm/bldstore/exe'
+#alias inf='. env_INF;cd $SRC_GSM/INF/WISE_INF/System/system-build/make'
+#alias linux='. env_GCC4ARM.sh;cd $SRC_GSM/LINUX/Davinci/Davinci/App/Build'
+
+############################### ClearCase DEFINE ###################################
+#alias findch='cleartool lscheckout -long .'
+#alias unch='echo cleartool unreserve -view [view_name:"~ view.stg"] [file_name]'
+
+#------------------------------ common -----------------------------------------
+function vim(){
+    VIMINIT=":so ~/.vim1/.vimrc" MYVIMRC=":so ~/.vim1/.vimrc" vi $*
+}
+
+
+
+
+function findgrep() { find . -name $1 -print | xargs grep -e "$2";}
+function findrm()
+{
+    if [ "$1" == "" ]; then echo [WARNING] plz input filename!!
+    else find . -name "$1" -exec rm -rf \{\} \;
+    fi
+}
+
+function scp_get()
+{
+    echo -n "Which number? ($SOLAR:1, $VM:2):"
+    read choice 
+    case "$choice" in
+        1)
+            scp joongkeun.kim@$SOLAR:/home/joongkeun.kim/$1 .
+            ;;
+        2)
+            scp lg@$VM:/store/shareUbuntu/src/$1 .
+            ;;
+    esac   
+}
+function scp_push()
+{
+    echo -n "Which number? ($SOLAR:1, $VM:2):"
+    read choice 
+    case "$choice" in
+        1)
+            scp $1 joongkeun.kim@$SOLAR:/home/joongkeun.kim 
+            ;;
+        2)
+            scp $1 lg@$VM:/store/shareUbuntu/src
+            ;;
+    esac
+}
+
+
+
+
+# If not running interactively, don't do anything
+[[ "$-" != *i* ]] && return
+
+# Shell Options
+#
+# See man bash for more options...
+#
+# Don't wait for job termination notification
+# set -o notify
+#
+# Don't use ^D to exit
+# set -o ignoreeof
+#
+# Use case-insensitive filename globbing
+# shopt -s nocaseglob
+#
+# Make bash append rather than overwrite the history on disk
+# shopt -s histappend
+#
+# When changing directory small typos can be ignored by bash
+# for example, cd /vr/lgo/apaache would find /var/log/apache
+# shopt -s cdspell
+
+# Completion options
+#
+# These completion tuning parameters change the default behavior of bash_completion:
+#
+# Define to access remotely checked-out files over passwordless ssh for CVS
+# COMP_CVS_REMOTE=1
+#
+# Define to avoid stripping description in --option=description of './configure --help'
+# COMP_CONFIGURE_HINTS=1
+#
+# Define to avoid flattening internal contents of tar files
+# COMP_TAR_INTERNAL_PATHS=1
+#
+# Uncomment to turn on programmable completion enhancements.
+# Any completions you add in ~/.bash_completion are sourced last.
+# [[ -f /etc/bash_completion ]] && . /etc/bash_completion
+
+# History Options
+#
+# Don't put duplicate lines in the history.
+# export HISTCONTROL=$HISTCONTROL${HISTCONTROL+,}ignoredups
+#
+# Ignore some controlling instructions
+# HISTIGNORE is a colon-delimited list of patterns which should be excluded.
+# The '&' is a special pattern which suppresses duplicate entries.
+# export HISTIGNORE=$'[ \t]*:&:[fb]g:exit'
+# export HISTIGNORE=$'[ \t]*:&:[fb]g:exit:ls' # Ignore the ls command as well
+#
+# Whenever displaying the prompt, write the previous line to disk
+# export PROMPT_COMMAND="history -a"
+
+# Aliases
+#
+# Some people use a different file for aliases
+# if [ -f "${HOME}/.bash_aliases" ]; then
+#   source "${HOME}/.bash_aliases"
+# fi
+#
+# Some example alias instructions
+# If these are enabled they will be used instead of any instructions
+# they may mask.  For example, alias rm='rm -i' will mask the rm
+# application.  To override the alias instruction use a \ before, ie
+# \rm will call the real rm not the alias.
+#
+# Interactive operation...
+# alias rm='rm -i'
+# alias cp='cp -i'
+# alias mv='mv -i'
+#
+# Default to human readable figures
+# alias df='df -h'
+# alias du='du -h'
+#
+# Misc :)
+# alias less='less -r'                          # raw control characters
+# alias whence='type -a'                        # where, of a sort
+# alias grep='grep --color'                     # show differences in colour
+# alias egrep='egrep --color=auto'              # show differences in colour
+# alias fgrep='fgrep --color=auto'              # show differences in colour
+#
+# Some shortcuts for different directory listings
+# alias ls='ls -hF --color=tty'                 # classify files in colour
+# alias dir='ls --color=auto --format=vertical'
+# alias vdir='ls --color=auto --format=long'
+# alias ll='ls -l'                              # long list
+# alias la='ls -A'                              # all but . and ..
+# alias l='ls -CF'                              #
+
+# Umask
+#
+# /etc/profile sets 022, removing write perms to group + others.
+# Set a more restrictive umask: i.e. no exec perms for others:
+# umask 027
+# Paranoid: neither group nor others have any perms:
+# umask 077
+
+# Functions
+#
+# Some people use a different file for functions
+# if [ -f "${HOME}/.bash_functions" ]; then
+#   source "${HOME}/.bash_functions"
+# fi
+#
+# Some example functions:
+#
+# a) function settitle
+# settitle () 
+# { 
+#   echo -ne "\e]2;$@\a\e]1;$@\a"; 
+# }
+# 
+# b) function cd_func
+# This function defines a 'cd' replacement function capable of keeping, 
+# displaying and accessing history of visited directories, up to 10 entries.
+# To use it, uncomment it, source this file and try 'cd --'.
+# acd_func 1.0.5, 10-nov-2004
+# Petar Marinov, http:/geocities.com/h2428, this is public domain
+# cd_func ()
+# {
+#   local x2 the_new_dir adir index
+#   local -i cnt
+# 
+#   if [[ $1 ==  "--" ]]; then
+#     dirs -v
+#     return 0
+#   fi
+# 
+#   the_new_dir=$1
+#   [[ -z $1 ]] && the_new_dir=$HOME
+# 
+#   if [[ ${the_new_dir:0:1} == '-' ]]; then
+#     #
+#     # Extract dir N from dirs
+#     index=${the_new_dir:1}
+#     [[ -z $index ]] && index=1
+#     adir=$(dirs +$index)
+#     [[ -z $adir ]] && return 1
+#     the_new_dir=$adir
+#   fi
+# 
+#   #
+#   # '~' has to be substituted by ${HOME}
+#   [[ ${the_new_dir:0:1} == '~' ]] && the_new_dir="${HOME}${the_new_dir:1}"
+# 
+#   #
+#   # Now change to the new dir and add to the top of the stack
+#   pushd "${the_new_dir}" > /dev/null
+#   [[ $? -ne 0 ]] && return 1
+#   the_new_dir=$(pwd)
+# 
+#   #
+#   # Trim down everything beyond 11th entry
+#   popd -n +11 2>/dev/null 1>/dev/null
+# 
+#   #
+#   # Remove any other occurence of this dir, skipping the top of the stack
+#   for ((cnt=1; cnt <= 10; cnt++)); do
+#     x2=$(dirs +${cnt} 2>/dev/null)
+#     [[ $? -ne 0 ]] && return 0
+#     [[ ${x2:0:1} == '~' ]] && x2="${HOME}${x2:1}"
+#     if [[ "${x2}" == "${the_new_dir}" ]]; then
+#       popd -n +$cnt 2>/dev/null 1>/dev/null
+#       cnt=cnt-1
+#     fi
+#   done
+# 
+#   return 0
+# }
+# 
+# alias cd=cd_func
+
+

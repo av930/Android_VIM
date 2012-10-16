@@ -1,0 +1,2 @@
+#vim option, 차이나는 부분은 gettext, mouse_urxvt
+./configure --prefix=/cygdrive/d/usr/local --with-features=huge --without-x --enable-gui=no --enable-multibyte --enable-hangulinput --enable-multibyte --enable-rubyinterp

@@ -1,0 +1,5 @@
+#!/bin/sh
+git remote add origin git@github.com:av930/vim_setting.git
+git push -u origin master
+
+git pull origin master

@@ -1,0 +1,66 @@
+"guard against sourcing the script twice
+if exists("g:loaded_nerdtree_start_shell_mapping")
+    finish
+endif
+let g:loaded_nerdtree_start_shell_mapping = 1
+
+"bind 'sh' to NERDTreeStartShell()
+call NERDTreeAddKeyMap({
+    \ 'key': 'sh',
+    \ 'callback': 'NERDTreeStartShell',
+    \ 'quickhelpText': 'start a :shell in this dir' })
+ 
+"change to the dir of the current node and start a :shell
+function! NERDTreeStartShell()
+
+    "grab the currently selected dir node (returns 
+    "the parent dir if a file is selected)
+    let n = g:NERDTreeDirNode.GetSelected()
+
+    "save the cwd so we can restore it after the :shell exits
+    let oldCWD = getcwd()
+
+    try
+
+        ":lcd to to the selected dir and :shell out
+        exec 'lcd ' . n.path.str({'format': 'Cd'})
+        redraw!
+        shell
+
+    "make sure we restore the cwd to its original state
+    finally
+        exec 'lcd ' . oldCWD
+    endtry
+endfunction
+
+"bind 'bs' to NERDTreeComparePathBase()
+call NERDTreeAddKeyMap({
+    \ 'key': 'bs',
+    \ 'callback': 'NERDTreeComparePathBase',
+    \ 'quickhelpText': 'compare this dir to' })
+
+"set base dir
+function! NERDTreeComparePathBase()
+
+    "grab the currently selected dir node (returns 
+    "the parent dir if a file is selected)
+     let n = g:NERDTreeFileNode.GetSelected()
+     let g:base_dir = n.path.str()
+endfunction
+
+"bind 'to' to NERDTreeComparePathTo()
+call NERDTreeAddKeyMap({
+    \ 'key': 'to',
+    \ 'callback': 'NERDTreeComparePathTo',
+    \ 'quickhelpText': 'compare with before' })
+
+"set base dir
+function! NERDTreeComparePathTo()
+
+    "grab the currently selected dir node (returns 
+    "the parent dir if a file is selected)
+     let n = g:NERDTreeFileNode.GetSelected()
+     exec ':NERDTreeClose'
+     exec ':DirDiff ' . g:base_dir . ' ' . n.path.str()
+endfunction
+

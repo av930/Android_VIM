@@ -1,0 +1,151 @@
+############################### USER DEFINE #####################################
+alias ls='ls -F --color=auto --show-control-chars'
+alias grep='grep --color=auto'
+alias env='env|sort'
+alias dir='ls -al -F --color=auto| grep /'
+
+#------------------------------ linux -----------------------------------------
+
+
+# KJK_TALK:   PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+# \u : username, \h : hostname
+case "$TERM" in
+xterm*|rxvt*)
+    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1 "
+    ;;
+*)
+    ;;
+esac
+
+alias dl='sudo repquota -as'
+    
+function java15()
+{
+JAVA_HOME=$JAVA_15HOME
+CLASSPATH=$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib/activation.jar
+PATH=.:$JAVA_HOME/bin:$PATH
+}
+
+
+function java16()
+{
+JAVA_HOME=$JAVA_16HOME
+CLASSPATH=$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib/activation.jar
+PATH=.:$JAVA_HOME/bin:$PATH
+}
+
+function xming()
+{
+Command=$(w|awk '/joongkeu/ {print $3}' |sort -u)
+export DISPLAY=${Command}:0.0
+}
+
+function gom()
+{
+show_menu_do "$(cat ~/MyAndroidDir)"
+if [ $? -eq 0 ];then croot;cd $RET;fi
+}
+
+
+function launch_cur_dir()
+{
+ip_addr=$(hostname -i)
+pwd|sed "s:home:\/$ip_addr:"|sed 's:\/:\\:g'
+}
+
+
+
+function show_menu_do(){
+## ---------------------------------------------------------------------------
+# show the menu and make user select one from it.
+
+local lines
+#should be up one token
+lines=($1)
+if [[ ${#lines[@]} = 0 ]]; then
+    echo "Not found"
+    return 1
+fi
+local pathname
+local choice
+if [[ ${#lines[@]} > 1 ]]; then
+    while [[ -z "$pathname" ]]; do
+        local index=1
+        local line
+        for line in ${lines[@]}; do
+            printf "%6s %s\n" "[$index]" $line
+            index=$(($index + 1))
+        done
+        echo
+        echo -n "Select one: "
+        unset choice
+        read choice
+        if [[ $choice -gt ${#lines[@]} || $choice -lt 1 ]]; then
+            echo "Invalid choice"
+            continue
+        fi
+        pathname=${lines[$(($choice-1))]}
+    done
+else
+    # even though zsh arrays are 1-based, $foo[0] is an alias for $foo[1]
+    pathname=${lines[0]}
+fi
+ RET=$pathname
+ return 0
+}
+
+function out(){
+local INPUT
+INPUT=$(find ~/ -maxdepth 3 -type d -name "out*" -exec \
+    find {}/target/product -mindepth 1 -maxdepth 1 -type d \; 2> /dev/null)
+show_menu_do "$INPUT"
+cd ${RET} 
+}
+
+
+#------------------------------ common -----------------------------------------
+function vim(){
+    VIMINIT=":so ~/.vim1/.vimrc" MYVIMRC=":so ~/.vim1/.vimrc" vi $*
+}
+
+
+
+
+function findgrep() { find . -name $1 -print | xargs grep -e "$2";}
+function findrm()
+{
+    if [ "$1" == "" ]; then echo [WARNING] plz input filename!!
+    else find . -name "$1" -exec rm -rf \{\} \;
+    fi
+}
+
+function scp_get()
+{
+    echo -n "Which number? ($SOLAR:1, $VM:2):"
+    read choice 
+    case "$choice" in
+        1)
+            scp joongkeun.kim@$SOLAR:/home/joongkeun.kim/$1 .
+            ;;
+        2)
+            scp lg@$VM:/store/shareUbuntu/src/$1 .
+            ;;
+    esac   
+}
+function scp_push()
+{
+    echo -n "Which number? ($SOLAR:1, $VM:2):"
+    read choice 
+    case "$choice" in
+        1)
+            scp $1 joongkeun.kim@$SOLAR:/home/joongkeun.kim 
+            ;;
+        2)
+            scp $1 lg@$VM:/store/shareUbuntu/src
+            ;;
+    esac
+}
+
+
+
+

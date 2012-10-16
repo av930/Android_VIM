@@ -1,0 +1,13 @@
+--style=ansi
+--indent-switches
+--indent-classes
+--indent-switches
+--indent-namespaces
+--indent-preprocessor
+--one-line=keep-blocks
+--one-line=keep-statements
+--brackets=break
+--min-conditional-indent=0
+--pad=oper
+--unpad=paren
+

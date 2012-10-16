@@ -1,0 +1,468 @@
+*rock.txt*        Vim-script library
+Copyright (c) 2012 please contact me (av9300@gmail.com)
+모든 help key는 <F#> hh로 mapping되어 있음 (ex: F1 hh #show my_help)
+_______________________________________________________________________________
+
+SHORT-CUT                                                             *my* , F1
+_______________________________________________________________________________
+
+HELP                                                                    *my_help*
+==============================================================================
+	show my         	        	                 F1        # toggle help
+	show my_help       	        	                 F1 hh     # F#-key hh is general help
+	update my_help .vim/doc/rock.txt                 F1 u     
+	edit my_help .vim/doc/rock.txt                   F1 m      # edit my_help     
+	edit current .vimrc	        	                 F1 e
+	update current .vimrc                            F1 r      # reload .vimrc
+	launch shell                                     F1 l, :sh 
+    vim 디버깅                                       F1 d      # ~/.vim/verbose.log 생성
+
+FILE                                                                  *my_file*
+==============================================================================
+시작
+    아무 설정없이 시작                               vi -u NONE filename    
+                                                     #-u는 vimrc file를 지정하나, NONE은 vimrc를 읽지 않게한다.
+    특정라인에서 시작                                vi file +100 
+    현재 설정보기                                    :   set all
+    key 설정보기                                     :   map
+
+파일
+    파일열기 (fast open)                             F2                #ctrlp plugin 으로 open 
+        (파일 다시열기 reload)                       :   edit    
+    닫기                                             :   q
+    모두닫기                                         :   qa
+    모조건 저장                                      :   wq [filename] #filename이 있을경우 filename으로 저장후 종료
+    변경사항이 있을경우만 저장종료                   :   x             #사용을 권장한다.
+    모두저장                                         :   wa
+    프로그램 종료                                    :   q!
+
+EDIT                                                                  *my_edit*
+==============================================================================
+편집
+    Undo                                             u
+    Redo                                             CTRL+ r
+    이전 작업 반복                                   .
+    indent 들여쓰기                                  >>
+        내어쓰기                                     <<
+    자동 indentation 블락단위                        v(블록)+ =
+        파일단위                                     possible-extenal  #indent 나 astyle사용
+    다음줄과 현재줄 합치기(join)                     J
+    복사하기 (clipboard 넣기)                        숫자   y   [w|y]  #w=word, y=line
+        붙여넣기 (clipboard 꺼내기)                  숫자   p          #ex) 4yw : 4단어를 복사, 3p: 3번붙여넣기
+		clipboard list확인하기                       :reg
+    다중 복사 (1줄 이상)                             "[a-z]복사명령    #ex) "a3yy :3줄을 a에 복사
+        다중 붙여넣기                                "[a-z]붙여넣기    #ex) "ap   :a의 내용을 붙여넣기
+    Block 모드(현재커서부터 block)                   v   ←↑→↓
+    Line Block 모드 (라인은 모두 block)              SHIFT+  v   ←↑→↓
+    Box Block 모드 (box 모양으로)                    CTRL+  v   ←↑→↓
+        복사                                         y
+        붙이기                                       p
+        삭제                                         d
+        확장명령                                     :명령(검색/삭제/치환)   #ex) :s/old/new/g
+    Column 모드 (세로 box 모양으로)                   CTRL+  v, SHIFT+ i, 글자입력, ESC 
+                                                     #편집중 첫줄만 수정되는것 처럼 보이나 ESC입력시 다된다.
+    코딩
+        기존 존재 symbol 자동완성                    possible-plugin
+		함수 자동완성                                possible-plugin
+        가능한 파라미터 보기                         possible-plugin
+        import문 자동넣기                            possible-plugin
+        에러 교정 힌트                               not supported
+        에러 자동 수정                               not supported
+        짧은주석 설정                                <leader>cc         #Nerd Commenter  v(블록) :s#^#//
+            해제                                     <leader>cu         #Nerd Commenter  v(블록) :s#^//#
+        짧은주석토글                                 <leader>ci         #Nerd Commenter
+        긴주석 설정                                  <leader>cm         #Nerd Commenter
+            해제                                     <leader>cu         #Nerd Commenter
+        대문자로                                     v(블록)+ U         #한라인을 대문자로 gUU
+        소문자로                                     v(블록)+ u         #한라인을 소문자로 guu
+
+    삭제
+        문자삭제                                     x
+        줄삭제                                       dd
+        현재 커서위치부터 줄앞까지 삭제              d0
+		현재 커서위치부터 줄끝까지 삭제              D
+        현재 커서위치부터 문서맨앞까지 삭제          dH
+        현재 커서위치부터 문서맨끝까지 삭제          dG
+
+    레코딩
+        시작                                         q[a-z]      #qa  a에 레코딩시작
+        종료                                         qq          #종료
+        적용                                         @[a-z]      #@a  레코딩 a 반복
+                                                                 #5@@ 이전 replay(즉,a) 5번 반복
+
+MOVE                                                               *my_move*
+==============================================================================
+커서이동
+	현재커서의 심볼 바로 찾기 (뒤로)			     *           #현재 cursor가 위치한 단어기준
+			다음 심볼	                             #
+	북마크		만들기	                             m   [A-Z]   #참고로 a를 bookmark하면 append로 잘못입력되기 쉽다
+			이동	                                 `   [A-Z]     
+	커서위치		이전 커서 위치	                 not supported  
+			다음 커서 위치	                         not supported
+			수정위치 이전	                         not supported
+					다음                             not supported     
+	페이지내이동		특정라인 이동	             :           #line num
+			단어단위로 앞/뒤					     w, e, b     #w는 word시작, e는 끝, b는 뒤로
+			구단위로 앞/뒤					 	     W, E, B     #/등은 단어구분자로 사용하지 않음(추천)
+			한줄에서 처음	                         ^, 0        #0은 첫colume, ^는 시작 colume
+				마지막                               $
+			한화면 앞으로	                         PGUP, CTRL+ BW, E, B       #/등은 단어구분자로 사용하지 않음(추천)
+				다음으로                             PGDN, CTRL+ Fw, e, b       #w는 word시작, e는 끝, b는 뒤로
+			파일에서 처음	                         gg
+				마지막                               G
+	짝찾기		괄호찾기 왼쪽 (	                     %           #%은 toggle되면서 이동함
+				오른쪽 )                             %           #모든 괄호 적용
+			대괄호 찾기 왼쪽{	                     %
+				오른쪽 }                             %
+			#ifdef 짝찾기                            not supported
+	접기 (fold)
+			현재 block 접기                          <Leader><Leader>t, za, zc	#fold toggle, fold close
+			현재 block 펼치기                        <Leader><Leader>t, za, zo  #fold za toggle, fold open
+			모두 닫기                                <Leader><Leader>c, zM	    #fold close all
+			모두 펼치기                              <Leader><Leader>o, zR	    #fold open recursive 
+        delete all fold                              zE
+	diff 이동
+		previous diff block                          <Leader><Leader> j
+		next diff block                              <Leader><Leader> k
+		import diff block                            <Leader><Leader> i
+		export diff block                            <Leader><Leader> e
+
+SEARCH                                                               *my_find*
+==============================================================================
+심볼 검색/이동
+	검색
+		파일내 심볼 찾기                             /  pattern
+			뒤로 찾기                                ?  pattern     #/(slash)포함문자열 검색시
+		incremental 찾기                             set incsearch  #.vimrc setting으로 해결해야 함
+		특정 dir이하 심볼 찾기                       F3             #grep.vim
+        전체프로젝트 심볼 찾기                       F12 + r        #ctag reference
+		caller 찾기                                  <leader>csp    #CScope
+
+		찾은 결과 List                               F12 + l        #ctag list
+		찾은 결과 하나씩 다음 이동                   F12 + 0        #ctag next
+		찾은 결과 하나씩 뒤로 이동                   F12 + 9        #ctag prev
+	바꾸기
+		파일내 문자열 바꾸기	                     :시작,끝 s/old/new/[cgi] #시작=[숫자|.],  끝=[숫자|.|$]
+			                                                        #c=물어보기,g=모두, i=대소문자없이
+		하위 dir포함 문자열 모두 바꾸기	             not supported
+		Project단위 문자열 모두 바꾸기	             not supported
+		특정 wordA가 포함된  line을 찾은후	
+			라인 삭제                                :g/pattern/d
+			wordB 문자열 변경                        :g/pattern/s/old/new/g
+
+		dos파일을 unix형식 &trailing space 지우기    <leader> unix
+	symbol 이동
+		심볼정의 바로이동                            F12, CTRL+]
+			현재창 돌아오기                          F11, CTRL+T
+		심볼정의 보기및 jump                         F10           #Source Explorer
+			리소스 정의 보기및 jump                
+		심볼 Sync                                    F12 + c       #ctags 생성
+
+
+WINDOW                                                               *my_win*
+==============================================================================
+창
+    소스화면
+        전체화면                                     F6, CTRL+W o  #ZoomWin Plugin
+        간단글꼴                                     not supported
+        심볼 Highlight                               :set hlsearch
+        특수문자 보기                                :set list
+        열린파일 list window                         F2+b          #ctrlp Plugin
+        다음파일                                     :bn
+        이전파일                                     :bp
+        최근 열었던 파일                             F2 r          #ctrlp Plugin
+        화면 refresh                                 CTRL+ L
+
+    심볼화면
+        파일내 심볼 list window                      F9           #Taglist, Tagvar
+        전체파일 심볼 list window                    F12 + r      #ctag
+        "
+        API Manual 보기                              K            #cursor가 해당 api위에 있을때
+        심볼 관계 (class, structure, enum등등)       not supported
+        심볼 caller구조                              not supported
+
+    폴더구조
+        DIR window                                   F8           #NerdTree 
+        탐색기 열기                                  CTRL+ F1     #teraterm으로 설정
+
+    Shell
+        Shell window 이동                            :shell, or Ctrl+Z로 bg로 이동
+        editor 복귀                                  exit
+        shell cmd 이동없이 바로실행                  :! cmd       #ex) :!ls
+
+    창간이동
+    general 창간이동                                 CTRL+   ←↑→↓ #(화살표) 창이 존재하는 대로 이동
+        editor 복귀                                  CTRL+   ←↑→↓   
+
+TAB-BUFF                                                          		*my_tab*
+==============================================================================
+	 이전 TAB으로 이동                   			 F5+  h
+     다음 TAB으로 이동                   			 F5+  l 
+	 TAB닫기                             			 F5+  c 
+	 new TAB 생성                        			 F5+  n
+     -------------------------------                                  *my_mini*
+	 BUFF list open                         		 F5
+	 BUFF list close                         		 F5+F5     #두번누르면 close
+	 이전 BUF으로 이동                   			 F5+  k 
+     다음 BUF으로 이동                   			 F5+  j
+
+_______________________________________________________________________________
+
+PLUGIN                                                               *my_plugin*
+_______________________________________________________________________________
+
+
+PATH                                                                  *my_path*
+==============================================================================
+VIMRUNTIME dir(.vim) 아래 file 편집하기
+    file명 입력시 dir를 포함하여 입력가능하며, tab으로 자동완성 가능    
+    파일 편집하기                                    :Vedit "file",    :Ve
+    수평분할 편집                                    :Vsplit "file",   :Vs
+    수직분할 편집                                    :Vvsplit "file",  :Vv
+    탭분할 편집                                      :Vtabedit "file", :Vt
+    미리보기 편집화면                                :Vpedit "file",   :Vp
+    해당파일을 현재파일로 가져오기                   :Vread "file",    :Vr
+    
+
+VUNDLE                                                              *my_vundle*
+==============================================================================
+    설치된 Bundle 정보 list up, vimrc를 읽어옴       :BundleList,               <F7> l
+    Bundle 설치하기                                  :BundleInstall [plugin],   <F7> i
+	Bundle update                                    :BundleInstall! [plugin],  <F7> u
+    Bundle 설치후 결과 로그 보기                     :VundleLog ,               <F7> o
+    Bundle 검색하기,!는 cache refresh                :BundleSearch(!) [plugin], <F7> r
+    Bundle 삭제하기,!는 force                        :BundleClean(!) [plugin],  <F7> c               
+    Bundle List Window                               :Bundles,                  <F7>
+       cursor가 존재하는 위치에서 
+       KEY | DESCRIPTION
+       ----|-------------------------- >
+        i  |  run :BundleInstall with name taken from line cursor is positioned on
+        I  |  same as i, but runs :BundleInstall! to update bundle
+        D  |  rm -rf로 해당 dir 삭제
+        c  |  run :BundleClean, .vim/bundle dir를 처음 설치상태로 원복
+        s  |  run :BundleSearch
+        R  |  fetch fresh script list from server
+
+
+FUGITIVE                                                               *my_git*
+==============================================================================
+    현재 file이 존재하는 git의 status                :Gstatus,       <F4> s
+       KEY | DESCRIPTION
+       ----|-------------------------- >
+      <CR> |  file name이 존재하는 cursor line에서 file open
+        -  |  file name이 존재하는 cursor line에서 git add/reset toggle
+        C  |  :Gcommit
+        cA |  :Gcommit --amend --reuse-message=HEAD
+        ca |  :Gcommit --amend
+        D  |  :Gdiff        
+        ds |  :Gsdiff      
+        dp |  :Git! diff (p for patch; use :Gw to apply)
+        dp |  :Git add --intent-to-add (untracked files)
+        dv |  :Gvdiff
+        O  |  :Gtabedit
+        o  |  :Gsplit
+        p  |  :Git add --patch
+        p  |  :Git reset --patch (staged files)
+        q  |  close status                   
+        R  |  reload status
+"
+
+    올린 사람 찾기                                   :Gblame,        <F4> b
+       KEY | DESCRIPTION
+       ----|-------------------------- >
+        o  |  cursor line에서 git show                     
+        O  |  open commit in new tab
+        q  |  close blame and return to blamed window
+        gq |  q, then :Gedit to return to work tree version
+        i  |  q, then open commit
+       <CR>|  reblame at commit
+        ~  |  reblame at [count]th first grandparent
+        P  |  reblame at [count]th parent (like HEAD^[count])
+"
+    git commit                                       :Gcommit,       <F4> c
+    git log                                          :Glog,          <F4> l
+    git diff [revision], no arg는 Index와 비교       :Gdiff [revision] 
+    edit 특정 revisionl                              :Gedit [revision], Gsplit,Gvsplit,Gtabedit
+
+    좀더 많은 명령이 있으니 추가적으로 살펴보아라. :help fugitive
+	
+DIRDIFF                                                               *my_diff*
+==============================================================================
+	2개의 파일을 비교함                              :DirDiff <dir or file> <dir or file>
+	   KEY | DESCRIPTION
+       ----|-------------------------- >
+       <CR>|  open 2 diff files
+	     s |  sync 2 diff files:    A->B, B->A, AlwaysA, AlwaysB, Skip, Cancel
+		 u |  update 2 diff files
+		 x |  set exclude pattern
+		 i |  set ignore pattern	
+    
+
+NERD-COMMENTER                                                     *my_comment*
+==============================================================================
+    한줄 주석 처리                                   :NERDCommenterComment,     <Leader> cc
+    여러줄 주석 처리                                 :NERDCommenterMinimal,     <Leader> cm
+    주석 해제                                        :NERDCommenterUncomment,   <Leader> cu
+    주석을 블럭별로 토글                             :NERDCommenterSexy',       <Leader> cs
+    주석을 라인별로 토글                             :NERDCommenterToggle,      <Leader> c <space>
+    주석 줄바꿈하지 않고 뒤에 */ 붙이기              :NERDCommenterInvert',     <Leader> ci
+    선택된 줄을 copy한후 주석처리                    :NERDCommenterYank',       <Leader> cy
+    align하여 주석처리                               :NERDCommenterAlignLeft',  <Leader> cl
+                                                     :NERDCommenterAlignBoth',  <Leader> cb
+    이미 주석이 있더라도 또다시 주석처리 가능,       :NERDCommenterNest',       <Leader> cn
+    줄처음이 아닌 현재 cursor부터 주석처리           :NERDCommenterToEOL',      <Leader> c$
+    주석입력을 위해 주석시작 기호이후 input mode전환 :NERDCommenterAppend',     <Leader> cA
+    주석하는 방법이 여러가지 일때, 다른 style로 주석처리 하기 (//와 /*간 변경) 
+                                                     :NERDCommenterAltDelims,   <Leader> ca
+    
+
+CTRLP                                                                *my_ctrlp*
+==============================================================================
+    현재 dir아래 모든 file 찾아 이동                 :CtrlP          <F2>
+    최근파일 list show                               :CtrlPMRU       <F2> r
+    현재 열린 파일 list show                         :CtrlPBuffer,   <F2> b
+
+    F2로 창이 열린상태에서 ...
+       KEY | DESCRIPTION
+       ----|-------------------------- >
+	 < ←↑→↓ |  > 파일 위아래로 이동하면서 선택
+	 <C-f> | 현재 파일 mode, :CtrlP와 동일 
+	 <C-b> | 현재 버퍼 mode, :CtrlPBuffer와 동일
+	 <C-d> | dir가 아닌 file 이름으로만 match
+	 <C-r> | regexp pattern mode
+	 <..>  | move upper dir
+	 <C-y> | create new file
+	 <C-m> | mark/umark
+	 <C-o> | open marked file 
+
+
+GREP                                                                  *my_grep*
+==============================================================================
+    현재 dir이하에서 cursor의 문자열을 검색한다      :Rgrep,          <F3>
+    현재 열여진 buffer에서 문자열을 검색한다         :GrepBuffer,     <F3> b
+    검색된 결과 list 창을 다시 연다                  :cwindow,        <F3> l
+    검색된 결과에 신규검색 결과를 붙인다             :검색명령Add, ex) :RgrepAdd
+
+
+ZOOMWIN                                                               *my_zoom* 
+==============================================================================
+    현재 커서창을 최대/최소 토글한다.                :ZoomWin,<C-w> o, <F6>
+    현재 커서창을 닫는다.                            :<C-w> c,         <F6> c
+    모든 창을 같은 크기로                            :<C-w> =,         <F6> =
+    창 layout 이동,좌하상우                          :<F6>h, <F6>j,<F6>k,<F6>l
+
+
+OBIOUS-RESIZE                                                       *my_resize*
+==============================================================================
+    현재 커서창을 상/하/좌/우로 resize한다.  like <hjkl> key 
+	가로분할시 좌로                                  :<C-u>
+	가로분할시 하로                                  :<C-o>
+	가로분할시 상으로                                :<C-i>	
+	가로분할시 우로                                  :<C-p>
+
+
+NERD-TREE                                                             *my_tree*
+==============================================================================
+    현재 dir기준으로 tree show                       :NERDTree [StartDir/bookmark]
+    현재 dir기준으로 tree show/hide toggle           :NERDTreeToggle,              <F8>
+    NerdTree에서 현재 file을 찾아 표시한다.          :NERDTreeFind,                <F8> f
+    NerdTree에서 현재 dir/file를 Bookmark한다        :Bookmark "name",             <F8> b
+	NerdTree에서 사용하는 Bookmark 파일을 편집한한다 :e ~/.vim/.NERDTreeBookmarks, <F8> e
+	NerdTree창에서 갱신된 Bookmark를 다시 읽어온다   :ReadBookmarks                <F8> r
+       KEY | DESCRIPTION
+       ----|-------------------------- >
+        u  |  상위 dir를 열기, 하위 dir 닫기 
+        U  |  상위 dir를 열기, 그러나 하위 dir open상태 유지 
+        p  |  부모 dir로 이동, 열지않고 이동만
+        P  |  ROOT dir로 이동, 열지않고 이동만
+        C  |  ROOT dir로 설정
+     <CR>  |  현재파일 열기
+        i  |  현재파일 가로분할 열기	
+        s  |  현재파일 세로분할 열기
+        t  |  Tab으로 현재 파일 열기
+        I  |  hidden file show toggle
+		?  |  help
+
+    추가적인 명령은 NERDTree에서 :help NERDTree에서 참고
+
+TAGVAR                                                               *my_tag*
+==============================================================================
+    현재 파일의 symbol browsing list window toggle   :TagbarToggle, <F9>
+       KEY | DESCRIPTION
+       ----|-------------------------- >
+	 <CR>  |  해당 tag로 jump
+	  p    |  tag로 jump하나, focus는 현재대로
+	  o    |  toggle folding
+	  *    |  open all sub folding
+	  s    |  tag 정렬
+	  x    |  zoom toggle
+	  F1   |  help
+
+    
+SOURCE-EXPLORER                                                       *my_srcexpl*
+==============================================================================
+    현재 파일의 현재 cursor 위치의 symbol의 context menu toggle
+                                                     :SrcExplToggle, <F10>
+       KEY | DESCRIPTION
+       ----|-------------------------- >
+	 <CR>  |  현재창에서 해당 소스로 jump
+  <Space>  |  이전 소스위치로 복귀
+    
+
+MINI-BUFFER                                                           *my_mini*
+==============================================================================
+    현재 open된 파일(buffer)에 대한 list를 Open한다. :MiniBufExplorer, <F5>
+    현재 open된 파일(buffer)에 대한 list를 토글한다. :CMiniBufExplorer, <F5><F5>
+
+       KEY | DESCRIPTION
+       ----|-------------------------- >
+    :bn/bp | next buffer/ previous buffer
+	:[N]b  | 해당 buffer를 바로 연다
+	:bd    | 해당 buffer를 닫는다
+	   j,k | buffer list 이동, 왼쪽/오른쪽으로
+	   o,e | buffer open, enter대신 사용가능
+	    d  | buffer close 
+	    s  | buffer split open
+	    v  | buffer vertical split open
+	<C-h,j,k,l> | window move:w
+
+
+
+
+
+_______________________________________________________________________________
+
+Not currently used
+_______________________________________________________________________________
+
+
+FUZZY-FINDER                                                            *my_fuzzy*
+==============================================================================
+    현재 dir아래 모든 file 찾아 이동                 :FufFile **/, <F5> o
+    현재 dir아래 모든 dir list show                  :FufDir,      <F5> p
+    최근파일 list show                               :FufJumpList  <F5> r
+    현재 열린 파일 list show                         :FufBuffer,   <F5> b
+       KEY | DESCRIPTION
+       ----|-------------------------- >
+	 <CR>  |  현재창에서 열기
+	 <C-j> |  가로 분할 열기
+	 <C-k> |  세로 분할 열기
+	 <C-l> |   탭  분할 열기
+
+
+COMMAND-T                                                             *my_command*
+==============================================================================
+    현재 dir아래 모든 file 찾아 이동                 :CommandT,       <leader> t
+    현재 열린 모든 buffer 찾아 이동                  :CommandTBuffer, <leader> b 
+	현재 검색된 cache 정보를 제거해라                :CommandTFlush
+            KEY | DESCRIPTION
+            ----|-------------------------- >
+	<ESC>,<C-c> |  창닫기
+		  <CR>  |  현재창에서 열기
+   <C-CR>,<C-s> |  가로 분할 열기
+		  <C-v> |  세로 분할 열기
+		  <C-t> |  탭  분할 열기
+
+
+"아래 line이 있어야 help file로 인식되어 coloring이 된다.
+vim:tw=140:ts=4:ft=help:norl:

@@ -1,0 +1,815 @@
+"==============================================================================="
+"set cmd : configure vi environments
+"=============================================================================="
+"let g:VIMRC_ROOT = "/cygdrive/d/code_study/vimrc/vim_NObundle_NOcommandt/"
+let g:VIMRC_ROOT = "/cygdrive/d/code_study/tool/"
+"echo g:VIMRC_ROOT
+
+"$VIMRUNTIME=vim 프로그램이 설치된 default script가 존재하는 dir
+"$VIMINIT=default는 $HOME/.vimrc 인데, 다른곳을 default로 설정하고 싶은 경우
+"$MYVIMRC=default는 $HOME/.vimrc 인데, 현재 loading된 .vimrc 
+"
+"$VIMRUNTIME=/usr/share/vim/vim73 "for linux and cygwin
+"$VIMRUNTIME=c:\gvim "for gvim
+"should be defined .bash_profile 
+	"export VIMRUNTIME=/usr/share/vim/vim73
+	"export VIMINIT=":so /cygdrive/d/code_study/vimrc/.vimrc"
+"or could be defined locally
+	"let $VIMRUNTIME=/usr/share/vim/vim73
+
+"runtimepath=the location where .vim directory is
+"let s:VIMRC_ROOT_RUNTIME = g:VIMRC_ROOT . '.vim'
+"set runtimepath=s:VIMRC_ROOT_RUNTIME,$VIMRUNTIME
+"echo 'KJK_DEBUG ['$VIMRUNTIME']:['$VIMINIT']:['$MYVIMRC']'
+"
+"leader settings
+"-------------------------------------------------------------------------------"
+let mapleader=','
+let maplocalleader=','
+
+
+"favorites 
+"=============================================================================="
+":echo $MYVIMRC
+nmap <silent> <leader>ev :e $MYVIMRC<CR>
+nmap <silent> <leader>rv :so $MYVIMRC<CR>
+
+" 상용구 설정
+"=============================================================================="
+iab mydate =strftime("%Y-%m-%d %H:%M:%S")
+iab mytime =strftime("%H:%M:%S")
+iab myname joongkeun.kim
+
+
+
+
+
+
+
+
+"==============================================================================="
+"
+" General Plugin Setting
+" 
+"_______________________________________________________________________________"
+"
+
+if 1 "plugin managements
+"==============================================================================="
+" pathogen
+"-------------------------------------------------------------------------------"
+"call pathogen#infect('/cygdrive/d/code_study/tool/.vim/bundle')
+let s:VIMRC_ROOT_BUNDLE = g:VIMRC_ROOT . '.vim/bundle/'
+"현재 bundle의 기준 dir로 설정되어야 한다.
+call pathogen#infect(s:VIMRC_ROOT_BUNDLE)
+filetype off                   " required!
+"
+"==============================================================================="
+endif
+
+
+if 1 "plugin managements
+"==============================================================================="
+" vundle
+"-------------------------------------------------------------------------------"
+" Brief help
+"
+" see :h vundle for more details or wiki for FAQ
+" NOTE: comments after Bundle command are not allowed..
+let s:VIMRC_ROOT_BUNDLE_VUNDLE = s:VIMRC_ROOT_BUNDLE . 'vundle'
+execute "set rtp+=".s:VIMRC_ROOT_BUNDLE_VUNDLE 
+call vundle#rc()
+
+"this string should be same to http://github.com/~
+"ex) http://github.com/gmarik/vundle
+"or
+"should be the full name in :BundleSearch output
+"
+Bundle 'gmarik/vundle'
+Bundle 'tpope/vim-fugitive'
+Bundle 'L9'
+Bundle 'The-Nerd-Commenter'
+Bundle 'FuzzyFinder'
+Bundle 'command-t'
+Bundle 'The-Nerd-Tree'
+Bundle 'taglist.vim'
+Bundle 'Source-Explorer-srcexpl.vim'
+
+"color theme
+Bundle 'inkpot'
+Bundle 'peaksea'
+"
+"==============================================================================="
+endif
+
+
+if 1 "Command-T can be supported with recompilation added --enable-rubyinterp
+"==============================================================================="
+" Command-T plugin 
+"-------------------------------------------------------------------------------"
+" functionality summary
+" <leader>t : current file list
+" <leader>b : current buffer list
+" ignore file listing
+set wildignore+=*.o,*.obj,.git,*.jar,*.so,*.a,*.class,*.apk,*.
+set wildignore+=*.js,*.html,*.jpg,*.png,*.gif,*.htm,*.jd,*.txv
+set wildignore+=cts/**,docs/**,ndk/**,sdk/**,external/**,out/product/**,
+
+
+" max file list up number, default:10000
+let g:CommandTMaxFiles = 60000
+" max directory depth
+let g:CommandTMaxDepth = 20
+" multiple key mapping for cancelling command-t window
+let g:CommandTCancelMap=['<Esc>', '<C-x>', '<C-c>']
+" multiple cache size 
+let g:CommandTMaxCachedDirectories=5
+
+"==============================================================================="
+endif
+
+
+if 1
+"==============================================================================="
+" fugitive plugin for GIT settings
+"-------------------------------------------------------------------------------"
+nnoremap <silent> <F4> :help my-git<CR>
+nnoremap <silent> <F4>b :Gblame<CR>
+nnoremap <silent> <F4>s :Gstatus<CR>
+nnoremap <silent> <F4>c :Gcommit<CR>
+nnoremap <silent> <F4>l :Glog<CR>
+
+"==============================================================================="
+endif
+
+
+if 1
+"==============================================================================="
+" inkpot plugin settings
+"-------------------------------------------------------------------------------"
+let g:inkpot_black_background = 1
+
+"==============================================================================="
+endif
+
+
+if 1
+"==============================================================================="
+" taglist plugin settings
+"-------------------------------------------------------------------------------"
+nnoremap <silent> <F8> :Tlist<CR>
+"now Tlst_Auto_Update = 1 , then auto updated
+""nnoremap <silent> <F7> :TlistUpdate<CR>
+
+let g:Tlist_Inc_Winwidth = 0
+let g:Tlist_Auto_Open = 0
+let g:Tlist_Process_File_Always = 0
+let g:Tlist_Enable_Fold_Column = 0
+let g:Tlist_Display_Tag_Scope = 0
+let g:Tlist_Sort_Type = "name"
+let g:Tlist_Use_Left_Window = 1
+let g:Tlist_Display_Prototype = 0
+let g:Tlist_Exit_OnlyWindow = 1
+"for open file in the same window with Tlist
+"let g:Tlist_File_Fold_Auto_Close = 1
+let g:Tlist_Compact_Format = 1
+" Always display one file tags
+let g:Tlist_Show_One_File = 1
+
+""let Tlist_Ctags_Cmd = '$HOME/bin/ctags.exe'   "Cygwin-specific option
+
+"==============================================================================="
+endif
+
+
+if 1
+"==============================================================================="
+" NERD-Tree plugin settings
+"-------------------------------------------------------------------------------"
+map <F9> :NERDTreeToggle<CR>
+map <F9>a :NERDTree /cygdrive/d/SRC_WORK/nativeICS/<CR>
+map <F9>f :NERDTreeFind <CR>>
+
+"auto close NERDTree after openning src file
+""let NERDTreeQuitOnOpen=1
+let g:NERDTreeWinPos="right"
+let g:NERDTreeWinSize = 30
+" Auto centre
+let g:NERDTreeAutoCenter = 0
+" Not Highlight the cursor line
+let g:NERDTreeHighlightCursorline = 0
+""inoremap <C-p> <ESC> :NERDTreeToggle<CR>
+""nnoremap <C-p> :NERDTreeToggle<CR>
+"==============================================================================="
+endif
+
+
+if 1
+"==============================================================================="
+" NERD-Commenter plugin settings
+"-------------------------------------------------------------------------------"
+"아래 해당 기능을 보려면 NERD_Commenter.txt 설명서에 keyword 검색을 하면 자세히 볼수있다.
+"변수명                       defaultvalue   설명
+"_______________________________________________________________________________
+"let loaded_nerd_comments"             "1, enable/disable
+"let NERDChristmasTree                 "1, 색깔넣어서 예쁘게
+"let NERDAllowAnyVisualDelims"         "1, Allows multipart alternative delims to be used when commenting in visual/visual-block mode.
+"let NERDBlockComIgnoreEmpty"          "1, Forces right delims to be placed when doing visual-block comments.
+"let NERDCommentWholeLinesInVMode"     "0, Changes behaviour of visual comments.
+let NERDCreateDefaultMappings=1        "1, Turn the default mappings on/off.
+let NERDDefaultNesting=0              "1, Tells the script to use nested comments by default.
+"let NERDMenuMode=1"                     "3, Specifies how the NERD commenter menu will appear (if at all).
+"let NERDUsePlaceHolders"              "1, Specifies which filetypes may use placeholders when nesting comments.
+"let NERDRemoveAltComs"                "1, Tells the script whether to remove alternative comment delimiters when uncommenting.
+"let NERDRemoveExtraSpaces"            "1, Tells the script to always remove theextra spaces when uncommenting (regardless of whether NERDSpaceDelims is set)
+"let NERDLPlace"                       "[>, Specifies what to use as the left delimiter placeholder when nesting comments.
+"let NERDRPlace"                       "<], Specifies what to use as the right delimiter placeholder when nesting comments.
+let NERDSpaceDelims=1                  "0, Specifies whether to add extra spaces around delimiters when commenting, and whether to remove them when uncommenting.
+"let NERDCompactSexyComs"              "0, Specifies whether to use the compact style sexy comments.
+"-------------------------------------------------------------------------------"
+
+"==============================================================================="
+endif
+
+
+
+if 1    
+"==============================================================================="
+" Source Explorer
+"-------------------------------------------------------------------------------"
+" // The switch of the Source Explorer
+nmap <F10> :SrcExplToggle<CR>
+
+" // Set the height of Source Explorer window
+let g:SrcExpl_winHeight = 8
+
+" // Set 100 ms for refreshing the Source Explorer
+let g:SrcExpl_refreshTime = 100
+
+" // Set "Enter" key to jump into the exact definition context
+let g:SrcExpl_jumpKey = "<ENTER>"
+
+" // Set "Space" key for back from the definition context
+let g:SrcExpl_gobackKey = "<SPACE>"
+
+" // In order to Avoid conflicts, the Source Explorer should know what plugins
+" // are using buffers. And you need add their bufname into the list below
+" // according to the command ":buffers!"
+let g:SrcExpl_pluginList = [
+        \ "__Tag_List__",
+        \ "_NERD_tree_",
+        \ "Source_Explorer",
+    \ ]
+" // Enable/Disable the local definition searching, and note that this is not
+" // guaranteed to work, the Source Explorer doesn't check the syntax for now.
+" // It only searches for a match with the keyword according to command 'gd'
+let g:SrcExpl_searchLocalDef = 1
+
+" // Let the Source Explorer update the tags file when opening
+let g:SrcExpl_isUpdateTags = 0 
+
+" // Use program 'ctags' with argument '--sort=foldcase -R' to create or
+" // update a tags file
+let g:SrcExpl_updateTagsCmd = "ctags --sort=foldcase -R ."
+
+" // Set "<F12>" key for updating the tags file artificially
+""let g:SrcExpl_updateTagsKey = "<S-F12>" 
+
+
+"==============================================================================="
+endif
+
+
+if 1
+"==============================================================================="
+" FuzzyFinder plugin settings
+"-------------------------------------------------------------------------------"
+"현재 디렉토리 이하에서 파일명으로 검색해서 읽어오기"
+
+"openfile: file 찾기, **/는 모든 dir match
+nnoremap <silent> <F2> :help my-fuzzy<CR> 
+nnoremap <silent> <F2>o :FufFile **/<CR> 
+"parent dir:  dir 찾기
+nnoremap <silent> <F2>p :FufDir!<CR>
+
+"recent file: 최근파일
+nnoremap <silent> <F2>r :FufJumpList!<CR>
+"buffer list: move buffer"
+nnoremap <silent> <F2>b :FufBuffer<CR> 
+
+"==============================================================================="
+endif
+
+
+if 1
+"==============================================================================="
+"ctags"
+"-------------------------------------------------------------------------------"
+nmap <F11> <C-t>
+nmap <F12> <C-]>
+set tags=tags,TAGS,$PWD/android_tags,$HOME/.vim/android_tags
+
+
+"generate absolute path to using ctags at any directory"
+if version >= 600
+
+    function! FindDir(dir)
+        let curdir = getcwd()
+        let found = curdir
+        while finddir(a:dir) == "/"
+            cd ..
+            let found = getcwd()
+        endwhile
+        return found
+    endfunction
+
+    function! FindFile(file)
+        let curdir = getcwd()
+        let found = curdir
+        while !filereadable(a:file) && found != "/"
+            cd ..
+            let found = getcwd()
+        endwhile
+        execute "cd " . curdir
+        return found
+    endfunction
+
+"    if has('ctags')    
+"        let $CSCOPE_DIR=s:FindFile("android_tags")
+"        if filereadable($CSCOPE_DIR)
+"            set tags=$CSCOPE_DIR
+"        endif
+"
+"    endif
+"    nmap  <LocalLeader>cd :call FindFile('Makefile')<cr>
+
+    func! FUNC_ctags_create()
+        let root_dir=FindFile('Makefile')
+        exe "!$HOME/.vim/myctags.sh" root_dir
+    endfunc
+    nmap <LocalLeader>ctag :call FUNC_ctags_create()<cr>
+
+    func! FUNC_ctags_jumpsplit()
+        let st = expand("<cword>")
+        exe "sts ".st
+    endfunc
+    nmap  <LocalLeader>sj :call FUNC_ctags_jumpsplit()<cr>
+endif
+"==============================================================================="
+endif
+
+
+if 1
+"==============================================================================="
+"cscope"
+"-------------------------------------------------------------------------------"
+" cscope cfg"
+set csprg=/usr/bin/cscope "which cscope" 
+set csto=0
+set cst
+set nocsverb
+
+
+    func! FUNC_cscope_create()
+        exe "!echo [cscope will be created, enter to continue]"
+        exe "!$HOME/.vim/mycscope.sh"
+    endfunc
+    nmap <LocalLeader>csc :call FUNC_cscope_create()<cr>
+
+    func! FUNC_cscope_search()
+        let st = expand("<cword>")
+        exe "cs find s ".st
+    endfunc
+    nmap  <LocalLeader>css :call FUNC_cscope_search()<cr>
+
+    func! FUNC_cscope_parent()
+        let st = expand("<cword>")
+        exe "cs find p".st
+    endfunc
+    nmap  <LocalLeader>csp :call FUNC_cscope_parent()<cr>
+
+    func! FUNC_cscope_descendant()
+        let st = expand("<cword>")
+        exe "cs find d ".st
+    endfunc
+    nmap  <LocalLeader>csd :call FUNC_cscope_descendant()<cr>
+
+    
+    func! FUNC_dos2unix()
+        exe "%s/
+//g"
+    endfunc
+    nmap  <LocalLeader>unix :call FUNC_dos2unix()<cr>
+
+endif
+"==============================================================================="
+
+if 1
+"==============================================================================="
+" vimdiff
+"-------------------------------------------------------------------------------"
+map <LocalLeader>n ]c
+map <LocalLeader>p [c
+"==============================================================================="
+endif
+
+
+
+if 0 "Trinity not needed anymore"
+"==============================================================================="
+" Trinity plugin settings + NERDTree, Taglist, Src Explorer
+"==============================================================================="
+endif
+
+
+if 0 "use FizzyFinder"
+"==============================================================================="
+" BufKill  plugin settings
+"==============================================================================="
+"map <C-r> :BD<CR> 
+endif
+
+
+if 0 "FuzzyFinder more usfule"
+"==============================================================================="
+" BufExplorer plugin settings
+"==============================================================================="
+let g:bufExplorerShowDirectories=0   " Don't show directories.
+endif
+
+
+if 0 "FuzzyFinder more usfule"
+"==============================================================================="
+" MiniBufExplorer plugin settings
+"==============================================================================="
+"ctrl+hjkl window move"
+let g:miniBufExplMapWindowNavVim = 1 
+"ctrl+arrow window move"
+let g:miniBufExplMapWindowNavArrows = 1
+"ctrl+tab buffer move"
+let g:miniBufExplMapCTabSwitchBufs = 1 
+"ctrl+tab buffer move direction"
+let g:miniBufExplModSelTarget = 1 
+endif
+
+
+if 0 "NERDTree is more useful"
+"==============================================================================="
+" WinManager plugin settings
+"==============================================================================="
+""nnoremap <silent> <F4> :WMToggle<CR>
+""nnoremap <silent> <F5> :FirstExplorerWindow<CR>
+""nnoremap <silent> <F6> :BottomExplorerWindow<CR>
+inoremap <C-o> <ESC> :WMToggle<CR> <C-w>h
+nnoremap <C-o> :WMToggle<CR>  <C-w>h
+
+let winManagerWindowLayout = 'FileExplorer|BufExplorer'
+let g:persistentBehaviour = 0
+endif
+
+
+if 0 "we don't use c++ auto complete much'"
+"==============================================================================="
+" OmniCppComplete plugin settings
+"==============================================================================="
+autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+
+let OmniCpp_GlobalScopeSearch = 1
+let OmniCpp_NamespaceSearch = 1
+let OmniCpp_DisplayMode = 0
+let OmniCpp_ShowScopeInAbbr = 0
+let OmniCpp_ShowPrototypeInAbbr = 0
+let OmniCpp_ShowAccess = 1
+let OmniCpp_DefaultNamespaces = []
+let OmniCpp_MayCompleteDot = 1
+let OmniCpp_MayCompleteArrow = 1
+let OmniCpp_MayCompleteScope = 0
+let OmniCpp_SelectFirstItem = 0
+let OmniCpp_LocalSearchDecl = 0
+
+endif
+
+
+
+
+"environments 
+"=============================================================================="
+set nocompatible "vi orinianal과 호환불가"
+set matchpairs+=<:> "{},[],()
+set ttymouse=xterm 
+set ttyfast "fast terminal transfer
+
+set mouse=a ""use the mouse in all modes
+set mousemodel=popup_setpos  "mouse button behavior
+set nobackup "backup file, 생성안함"
+set noswapfile "swap파일 생성 안함
+"set autochdir "chdir to the file located when opening file 
+"가끔 위의 명령은 plugin에서 동작알될때가 있다. 그 경우 아래 사용
+autocmd BufEnter * silent! lcd %:p:h 
+
+
+
+let g:MyVimTips="off"
+function! ToggleVimTips()
+    if g:MyVimTips == "on"
+        let g:MyVimTips="off"
+        pclose
+    else
+        let g:MyVimTips="on"
+        pedit ~/.vim/doc/rock.txt
+    endif
+endfunction
+
+nnoremap <F5> :call ToggleVimTips()<CR>
+
+
+"encoding 
+"=============================================================================="
+set encoding=utf-8 "read encoding"
+set fileencoding=utf-8 "write encoding: fenc"
+set fileencodings=utf-8,cp949,unicode "write encoding: fencs"
+set fileformat=unix
+set fileformats=unix,dos,mac
+"set termencoding=utf-8
+set termencoding=korea                " Cygwin-specific option
+
+
+"search 
+"=============================================================================="
+set magic "search시 pattern입력시 특수문자 입력시 backslash를 달아야 한다.
+set hlsearch "when searching by using /, hilight match word"
+nmap <silent> <leader>/ :nohlsearch<CR> "search시 hlsearch로 highlight 이후 un-highlight할때 
+"set incsearch "with hlsearch incremetal search", slow for big-size file
+
+""search pattern시 대소문자 구별을 하지 않는다.
+"ignorecase toggle을 원하면 :set ic!
+set ignorecase 
+
+"search pattern이 모두 소문자이면 실제 검색시 대소문자 구별 안한다.
+"만약 구별을 해야 한다면 xxx search시 /\Cxxx로 검색해라
+set smartcase 
+
+" search symbol in sub directories
+"-------------------------------------------------------------------------------"
+set grepprg=grep\ -r\ -n\ --color=auto\ --exclude=*.repo\ --exclude=*.git
+nmap <LocalLeader>find :exe '!grep ' . expand('<cword>') . ' *'<CR>
+
+
+"autoe complete 
+"=============================================================================="
+set history=200 "viminfo history buffer"
+set completeopt+=menuone
+set complete-=i
+set complete-=t
+set wildchar=<Tab> "autocomplete에 사용되는 key
+set wildmenu "autocomplete시 simple menu를 보여줌
+set wildmode=longest:full,full
+
+set smartindent "똑똑한 indent"
+set autoindent "자동 indent in newline"
+set cindent "c일때 자동 indent"
+set cinoptions=:0,g0,(0,l1,t0
+set nofoldenable "not folding"
+
+
+" autocomplete for braket,quote,etc
+" ---------------------------------
+" bracket autocompletion
+"autocmd Syntax html,vim inoremap < <lt>><ESC>i| inoremap > <c-r>=ClosePair('>')<CR>
+
+"folds code start/end
+"-------------------------------------------------------------------------------"
+nmap <LocalLeader>fs v]}zf
+nmap <LocalLeader>fe zo
+
+
+
+"editing  
+"=============================================================================="
+set hidden "새로운 buffer를 열기전에 이전 buffer를 반드시 저장하지v않아도(hidden) 된다 
+"set autoread "file auto reload, when file is changed outside
+"set autowrite "아래와 같은 명령시 자동으로 저장 하는 가에 대한 옵션이다.
+            " :next, :rewind, :last, :first, :previous, :stop, :suspend, :tag, :!,
+set nowrap "auto 줄바꿈 안함"
+"set pastetoggle=<Ins>
+set clipboard+=unnamed " share windows clipboard
+set backspace=indent,eol,start "make backspace more flexible
+
+set expandtab "use space instead of tab"
+set tabstop=4 "tab key를 4width로 조정"
+set shiftwidth=4 "auto indentation시 width"
+set softtabstop=0
+" toggle paste mode, when you copy text from external clipboard, and paste, ban cascading indentation
+nmap <LocalLeader>pp :set pastetoggle<cr>
+" when you open root previledged file, and save please use w!!
+cmap w!! w !sudo tee % >/dev/null 
+    
+
+"move cursor
+"=============================================================================="
+nnoremap j gj
+nnoremap k gk
+set startofline "이동명령시(H,M,L,G,c-f,c-d) line의 첫번째로 cursor 이동"
+
+
+"window 
+"=============================================================================="
+set laststatus=2 "status bar를 window갯수에 상관없이 항상 표시해라
+set ruler "show col,row position of cursor"
+set number "show line number"
+set scrolloff=5 "last 5 line scroll start
+set sidescrolloff=5 "last 5 column scroll start"
+set report=0 "몇줄이 바꿨는지 statusbar에 알려주는 기능을 0이면 항상 on, 숫자면 그이상이면 on"
+set selection=exclusive
+set showcmd "show current command"
+set showmatch "matched brace highlighting"
+set showmode
+" set statusline=%<%F%h%m%r%h%w%y\ %{strftime(\"%Y/%m/%d-%H:%M\")}%=\ col:%c%V\ ascii:%b\ pos:%o\ lin:%l\,%L\ %P
+"set statusline=%-3.3n\ %f\ %r%#Error#%m%#Statusline#\ (%l/%L,\ %v)\ %P%=%h%w\ %y\ [%{&encoding}:%{&fileformat}]
+set statusline=%F%m%r%h%w[%L][%{&ff}:%{&encoding}]%y[%p%%][%04l,%04v]
+"              | | | | |  |   |      |                |     |    |
+"              | | | | |  |   |      |                |     |    + current 
+"              | | | | |  |   |      |                |     |       column
+"              | | | | |  |   |      |                |     +-- current line
+"              | | | | |  |   |      |                +-- current % into file
+"              | | | | |  |   |      +-- current syntax in square brackets
+"              | | | | |  |   +-- current fileformat
+"              | | | | |  +-- number of lines
+"              | | | | +-- preview flag in square brackets
+"              | | | +-- help flag in square brackets
+"              | | +-- readonly flag in square brackets
+"              | +-- rodified flag in square brackets
+"              +-- full path to file in the buffer
+set title "show title"
+"set virtualedit=onemore                        " Has to be used with caution!!
+set whichwrap=b,s,h,l,<,>,~,[,] " everything wraps
+"             | | | | | | | | |
+"             | | | | | | | | +-- "]" Insert and Replace
+"             | | | | | | | +-- "[" Insert and Replace
+"             | | | | | | +-- "~" Normal
+"             | | | | | +-- <RightNormal and Visual
+"             | | | | +-- <LeftNormal and Visual
+"             | | | +-- "l" Normal and Visual (not recommended)
+"             | | +-- "h" Normal and Visual (not recommended)
+"             | +-- <SpaceNormal and Visual
+"             +-- <BSNormal and Visual>>>>>
+"set visualbell "경고소리 깜빡임으로 대치"
+"set noerrorbells "경고음 없앰"
+
+" setup for the visual environment
+if has('gui_running')
+	colorscheme inkpot
+	"echo "gui_running"
+else
+	"echo "gui_running not running"
+	if $TERM =~ '^xterm'
+		set t_Co=256
+	elseif $TERM =~ '^screen-bce'
+		set t_Co=256            " just guessing
+	elseif $TERM =~ '^screen'
+		set t_Co=256            " just guessing, too
+	elseif $TERM =~ '^rxvt'
+		set t_Co=88
+	elseif $TERM =~ '^linux'
+		set t_Co=8
+	elseif $TERM =~ '^cygwin'
+		set t_Co=8
+	else
+		set t_Co=16
+	endif
+
+	if &t_Co > 16
+		colorscheme inkpot
+		"colorscheme peaksea
+		"set background=dark
+
+	else
+		colorscheme ron
+	endif
+endif
+
+
+
+"==============================================================================="
+" mapping grammar
+"==============================================================================="
+"{cmd} {attr} {lhs} {rhs}
+"
+"where
+"{cmd}  is one of ':map', ':map!', ':nmap', ':vmap', ':imap',
+"       ':cmap', ':smap', ':xmap', ':omap', ':lmap', etc.
+"{attr} is optional and one or more of the following: <buffer>, <silent>,
+"       <expr> <script>, <unique> and <special>.
+"       More than one attribute can be specified to a map.
+"{lhs}  left hand side, is a sequence of one or more keys that are being
+"       mapped.
+"{rhs}  right hand side, is the sequence of keys that the {lhs} keys are
+"       mapped to.
+"{cmd}!??-------------------------------------------------------------------------      
+"map 각 모드별 단축키/ 해제는 map앞에 un을 부텨 unmap으로 해주면 된다. 
+"map/unmap은 모든 모드에서 mapping/unmapping, norempp은 모든모드에서 no recursive mapping
+"map!는 insert/command 모드로 mapping
+"
+"nmap/nnomap : 일반 모드
+"imap/inomap : 입력 모드
+"vmap/vnomap : visual 모드 & select 모드
+"smap/snomap : select 모드
+"xmap/xnomap : visual 모드
+"cmap/cnomap : 명령행 모드
+"omap/onomap : operator pending 모드
+"
+"remap : recursive maping and it is default
+"noremap : no recursive maping and 
+"
+"example)
+"map j gg
+"map Q j
+"noremap W j
+"
+"j will map gg, but W map only j not gg
+"==============================================================================="
+
+
+syntax on
+filetype on 
+filetype plugin on "filetype에 따라 plugin이 동작해라
+filetype indent on "indentation도 마찬가지
+
+"==============================================================================="
+"au(autocommand) : register user callback
+"==============================================================================="
+
+""in *, if .vim.custom.# file exist. replace it 
+au BufNewFile,BufRead *.html call CheckForCustomConfiguration(0)
+function! CheckForCustomConfiguration()
+    " Check for .vim.custom in the directory containing the newly opened
+    " file
+    "let custom_config_file = expand('%:p:h') . '/.vim.custom'
+    let custom_config_file = '~/.vim.custom_' . a:input
+    if filereadable(custom_config_file)
+        exe 'source' custom_config_file
+    endif
+endfunction
+
+""in makefile, don't use space instead of tab'
+autocmd BufNewFile,BufReadPost Makefile set noexpandtab
+"autocmd FileType man    
+
+"c,cpp,java file, if you put % to match, =,; toggled matched
+au FileType c,cpp,java set mps+==:;
+"  ---------------------- -------  --------------
+"  on event                file    do command"
+">>>on event: 
+"BufNewFile: starting to edit a non-existent file
+"BufReadPre/BufReadPost: starting to edit an existing file
+"FilterReadPre/FilterReadPost: read the temp file with filter output
+"FileRead/PreFileReadPost: any other file read
+">>>file: *.c, x.x
+">>>cmd: set noexpandtab, 
+
+
+"Uncomment the following to have Vim jump to the last position when
+" reopening a file
+"if has("autocmd")
+"  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+"    \| exe "normal g'\"" | endif
+"endif
+
+
+
+"==============================================================================="
+" General key mappting
+"==============================================================================="
+
+"help: update new help tags
+"-------------------------------------------------------------------------------"
+nmap <LocalLeader>help :helptags ~/.vim/doc
+
+
+"move window
+"-------------------------------------------------------------------------------"
+noremap <C-J> <C-W>j
+noremap <C-K> <C-W>k
+noremap <C-H> <C-W>h
+noremap <C-L> <C-W>l
+"세로 2열화면으로 가로2열로 
+noremap <C-L>l <C-W><S-L> 
+"반대로 
+noremap <C-K>k <C-W><S-K> 
+
+
+" tabs
+"-------------------------------------------------------------------------------"
+" create a new tab
+noremap <LocalLeader>tc :tabnew %<cr>
+" close a tab
+noremap <LocalLeader>td :tabclose<cr>
+" next tab
+noremap <S-L> :tabnext<cr>
+" previous tab
+noremap <S-H> :tabprev<cr>
+
+
+
+

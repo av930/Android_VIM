@@ -1,0 +1,70 @@
+#!/bin/sh
+#         @(#) tree      1.1  30/11/95       by Jordi Sanfeliu
+#                                         email: mikaku@arrakis.es
+#
+#         Initial version:  1.0  30/11/95
+#         Next version   :  1.1  24/02/97   심볼릭 링크도 지원
+#         Patch by       :  Ian Kjos, 찾을 수 없는 디렉토리 지원
+#                           email: beth13@mail.utexas.edu
+#
+#         Tree 는 디렉토리 트리를 보여주는 툴입니다.(확실히 보여줍니다 :-) )
+#
+
+# ==> 'Tree' 는 원저자, Jordi Sanfeliu의 허락을 받아서 여기에 쓰여졌습니다.
+# ==> HOWTO 저자가 덧붙인 주석
+
+
+search () {
+   for dir in `echo *`
+   # ==> `echo *` 는 현재 디렉토리의 모든 파일들을 한 줄에 표시해 줍니다.
+   # ==> for dir in *    와 같습니다.
+   do
+      if [ -d $dir ] ; then   # ==> 디렉토리라면(-d)...
+         zz=0   # ==> 디렉토리 깊이를 갖고 있을 임시 변수
+         while [ $zz != $deep ]   # 안쪽 루프인지
+         do
+            echo -n "|   "    # ==> 수직 연결자를 표시
+	                      # ==> 정렬(indent)을 위한 라인 피드 없는 두개의 빈 칸
+            zz=`expr $zz + 1` # ==> zz 를 증가.
+         done
+         if [ -L $dir ] ; then    # ==> 디렉토리가 심볼릭 링크라면...
+            echo "+---$dir" `ls -l $dir | sed 's/^.*'$dir' //'`
+	    # ==> 수평 연결자와 디렉토리 이름을 표시하지만 긴 표시(long listing) 
+		# ==> 형식의 날짜/시간 부분을 지움
+         else
+            echo "+---$dir"    # ==> 수평 연결자와 디렉토리 이름을 표시
+            if cd $dir ; then  # ==> 하위 디렉토리로 들어갈 수 있으면...
+               deep=`expr $deep + 1`   # ==> 깊이를 증가
+               search    # 재귀 함수 ;-)
+	                 # ==> 자기 자신을 부르는 함수
+               numdirs=`expr $numdirs + 1`   # ==> 디렉토리 숫자를 증가
+            fi
+         fi
+      fi
+   done
+   cd ..   # ==> 부모 디렉토리로 올라감
+   if [ $deep ] ; then  # ==> depth = 0 이면 (참을 리턴)...
+      swfi=1            # ==> 탐색이 끝났음을 알리는 플래그를 세트
+   fi
+   deep=`expr $deep - 1`   # ==> 깊이를 감소
+}
+
+# - 메인 -
+if [ $# = 0 ] ; then
+   cd `pwd`    # ==> 인자없이 불렸다면 현재 디렉토리에서 시작
+else
+   cd $1       # ==> 아니라면 주어진 디렉토리로 이동
+fi
+echo "시작 디렉토리 = `pwd`"
+swfi=0      # ==> 탐색 종료 플래그
+deep=0      # ==> 보여줄 깊이
+numdirs=0
+zz=0
+
+while [ $swfi != 1 ]   # 플래그가 세트 안 된 동안에...
+do
+   search  # ==> 변수들을 초기화하고 함수를 부름
+done
+echo "전체 디렉토리 수 = $numdirs"
+
+

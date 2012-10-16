@@ -1,0 +1,59 @@
+# please see /etc/.inputrc too
+
+
+############################# This is for using Hangul ##############################
+# input 8bit input
+set meta-flag on
+set input-meta on
+
+#turn off 8th bit stripping
+set convert-meta off
+
+#keep the 8th bit for display
+set output-meta on
+
+############################# This is for No case sensitive  ##############################
+# Ignore case while tab completing
+set completion-ignore-case on
+
+# if there are more than 150 possible completions for a word, ask the
+# # user if he wants to see all of them
+set completion-query-items 150
+
+# put the '/'char to end of directory to distinct with file, same way as 'ls -F' 
+set visible-stats on
+
+#Completed names which are symbolic links to directories have a slash appended.
+set mark-symlinked-directories on
+
+# have to hit the <Tab> key twice to produce a list of all possible completions.
+# A single <Tab>  will suffice.
+#set show-all-if-ambiguous on
+
+# none, visible or audible, tab completion mismatch
+set bell-style none
+
+# print output on only 1 line
+set horizontal-scroll-mode off
+
+############################## This is Key Binding ##############################
+#key-binding을 해주는 부분으로 현재 사용하는 key값을 알아내려면 다음과 같이 하면된다.
+#Ctrl+V, key -> homekey를 알아내려면 Ctrl+V HOME으로 [1~ 값이 나오게 된다.
+
+#allow the use of the Home/End keys
+"\e[1~": beginning-of-line
+"\e[4~": end-of-line
+
+# allow the use of the Delete/Insert keys
+"\e[3~": delete-char
+"\e[2~": quoted-insert
+
+# mappings for "page up" and "page down" to step to the beginning/end 
+# of the history
+"\e[5~": beginning-of-history
+"\e[6~": end-of-history
+
+# alternate mappings for "page up" and "page down" to search the history
+"\e[5~": history-search-backward
+"\e[6~": history-search-forward
+

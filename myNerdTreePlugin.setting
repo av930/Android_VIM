@@ -61,6 +61,11 @@ function! NERDTreeComparePathTo()
     "the parent dir if a file is selected)
      let n = g:NERDTreeFileNode.GetSelected()
      exec ':NERDTreeClose'
-     exec ':DirDiff ' . g:base_dir . ' ' . n.path.str()
+     try
+        let g:miniBufExplorerMoreThanOne =10
+        exec ':DirDiff ' . g:base_dir . ' ' . n.path.str()
+     finally
+        let g:miniBufExplorerMoreThanOne =2
+     endtry
 endfunction
 

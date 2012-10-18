@@ -551,7 +551,7 @@ set splitbelow "default window 배치 설정: 선언시 상하
 let g:miniBufExplSplitBelow=0  "0:up or left, 1: below or right
 let g:miniBufExplSplitToEdge=1
 "let g:miniBufExplVSplit = 20 "가로 정렬일때 Height
-let g:miniBufExplorerMoreThanOne =2 "instance가 1개만 뜨도록, nerdtree와 함께 사용시 error를 막을수 있음
+let g:miniBufExplorerMoreThanOne =5 "buffer가 2개 이상일때만 load되도록
 let g:miniBufExplMapWindowNavVim =1 "0, "ctrl+hjkl window move"
 "let g:miniBufExplMapWindowNavArrows  "1, "ctrl+arrow window move"
 "let g:miniBufExplMapCTabSwitchBufs  "1, "ctrl+tab buffer move"
@@ -605,18 +605,47 @@ let g:DirDiffWindowSize = 14
 "Ignore case during diff, 1:ignore, 0:case sensitive
 let g:DirDiffIgnoreCase = 0
 
+"preprocess
+function! FUNC_Test()
+   BundleInstall
+endfunction
+nmap <F1>t :call FUNC_Test()<cr>
+
+
+"preprocess
+if !exists("g:func_prepro") 
+"==============================================================================="
+let g:func_prepro = 1
+function! FUNC_PreProcess()
+    exe "silent !rm -f " . "~/.vimrc"
+    exe "silent !ln -s " . g:vim_root_path . ".vimrc ~/.vimrc"
+    exe "silent !mkdir -p " . g:vim_root_path . "bundle/vundle/"
+    exe "silent !git clone " . "git://github.com/gmarik/vundle.git ~/.vim/bundle/vundle"
+    sleep 200m
+    so $MYVIMRC
+    BundleInstall
+    sleep 500m
+    close
+    call FUNC_CopyNERDDiff("myNerdTreePlugin.setting", "bundle/The-NERD-tree/nerdtree_plugin/myNerdTreePlugin.vim")
+    call FUNC_CopyNERDDiff("DirDiff.setting", "bundle/DirDiff.vim/plugin/DirDiff.vim")
+    helptags ~/.vim/doc
+    so $MYVIMRC
+    redraw!
+endfunction
+
 "with NERDTree
 function! FUNC_CopyNERDDiff(sour, dest)
     if filereadable(g:vim_root_path . a:sour) 
         return 
     else
-        exe "silent !cp -uf " . g:vim_root_path . a:sour . ' ' .  g:vim_root_path . a:dest
+        exe "silent !cp -f " . g:vim_root_path . a:sour . ' ' .  g:vim_root_path . a:dest
     endif
 endfunction
 
-call FUNC_CopyNERDDiff("myNerdTreePlugin.setting", "bundle/The-NERD-tree/nerdtree_plugin/myNerdTreePlugin.vim")
-call FUNC_CopyNERDDiff("DirDiff.setting", "bundle/DirDiff.vim/plugin/DirDiff.vim")
+nmap <F1>z :call FUNC_PreProcess()<cr>
 
+"_______________________________________________________________________________
+endif
 "_______________________________________________________________________________
 endif
 
@@ -830,14 +859,6 @@ set noswapfile "swap파일 생성 안함
 autocmd BufEnter * silent! lcd %:p:h 
 
 
-"shell
-"=============================================================================="
-"you can run shell with alias, cd path
-"set shell=/bin/bash\ -i 
-"you can run shell with alias, reload .vimrc
-"set shell=/bin/bash\ --login
-
-
 "encoding 
 "=============================================================================="
 set encoding=utf-8 "read encoding"
@@ -1049,8 +1070,8 @@ else
 	endif
 
 	if &t_Co > 16
-		"colorscheme inkpot "dark theme
-		colorscheme jellybeans "dark theme, 부드러움
+		colorscheme inkpot "dark theme
+		"colorscheme jellybeans "dark theme, 부드러움
 		"colorscheme wombat "dark theme, 고대비 강조
 		"colorscheme peaksea "white theme
 		"set background=dark
@@ -1157,9 +1178,18 @@ nnoremap <F1>d :call ToggleVerbose()<CR>
 
 function! LaunchShell()
     let oldCWD = getcwd()
+    set shell=/bin/bash\ -i 
     exec 'lcd ' .  oldCWD
     shell
 endfunction
+
+"shell
+"=============================================================================="
+"you can run shell with alias, cd path
+"set shell=/bin/bash\ -i 
+"you can run shell with alias, reload .vimrc
+"set shell=/bin/bash\ --login
+
 
 " show my help 
 "-------------------------------------------------------------------------------"
@@ -1179,7 +1209,7 @@ endfunction
 
 function! ToggleVerbose()
     if !&verbose
-        echo ~/.vim_trace.log will be saved'
+        echo '~/.vim_trace.log will be saved'
         set verbosefile=~/.vim_trace.log
         set verbose=15
     else

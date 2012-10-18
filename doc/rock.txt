@@ -16,6 +16,7 @@ HELP                                                                    *my_help
 	update current .vimrc                            F1 r      # reload .vimrc
 	launch shell                                     F1 l, :sh 
     vim 디버깅                                       F1 d      # ~/.vim/verbose.log 생성
+	vim 설치후 자동 환경 설정                        F1 z      # 초기설치시 1회 실행 
 
 FILE                                                                  *my_file*
 ==============================================================================
@@ -200,12 +201,30 @@ TAB-BUFF                                                          		*my_tab*
      다음 TAB으로 이동                   			 F5+  l 
 	 TAB닫기                             			 F5+  c 
 	 new TAB 생성                        			 F5+  n
-     -------------------------------                                  *my_mini*
+     -------------------------------                                   |my_mini|                 
 	 BUFF list open                         		 F5
 	 BUFF list close                         		 F5+F5     #두번누르면 close
 	 이전 BUF으로 이동                   			 F5+  k 
      다음 BUF으로 이동                   			 F5+  j
 
+
+CGDB                                                             		*my_gdb*
+==============================================================================
+     디버깅창(gdb mode) focus                        i
+     소스창(cgdb mode) focus                         ESC
+       KEY | DESCRIPTION
+       ----|-------------------------- >
+        o  |                                         소스열기(file dialog window)
+      space|                                         break toggle
+       t   |                                         temp break(걸리면 자동삭제)
+       F5  |                                         run
+       F6  |                                         continue
+       F7  |                                         finish
+       F8  |                                         next
+       F10 |                                         step
+       +,- |                                         창크기 조절,25% 단위로 증감 
+     
+       
 _______________________________________________________________________________
 
 PLUGIN                                                               *my_plugin*

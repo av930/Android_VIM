@@ -100,8 +100,8 @@ MOVE                                                               *my_move*
 			이동	                                 `   [A-Z]     
 	커서위치		이전 커서 위치	                 not supported  
 			다음 커서 위치	                         not supported
-			수정위치 이전	                         not supported
-					다음                             not supported     
+			수정위치 이전	                         g;
+					다음                             g,
 	페이지내이동		특정라인 이동	             :           #line num
 			단어단위로 앞/뒤					     w, e, b     #w는 word시작, e는 끝, b는 뒤로
 			구단위로 앞/뒤					 	     W, E, B     #/등은 단어구분자로 사용하지 않음(추천)
@@ -211,6 +211,20 @@ TAB-BUFF                                                          		*my_tab*
 CGDB                                                             		*my_gdb*
 ==============================================================================
      디버깅창(gdb mode) focus                        i
+	   KEY               | DESCRIPTION                   
+       ------------------|-------------------------- >   
+       info threads      |                               현재 tread정보보기
+       info breakpoints  |                               breakpoint 정보보기
+	   pgup, pgdown      |                               gdb window scroll  
+       bt                |                               call stack
+       b                 |                               break
+       c                 |                               continue
+       s                 |                               step
+	   n                 |                               next (step over)
+	   info sharedlibrary
+	   add-symbol-file out/target/product/generic/symbols/system/lib/libstagefright_foundation.so	   
+
+	   
      소스창(cgdb mode) focus                         ESC
        KEY | DESCRIPTION
        ----|-------------------------- >
@@ -220,7 +234,7 @@ CGDB                                                             		*my_gdb*
        F5  |                                         run
        F6  |                                         continue
        F7  |                                         finish
-       F8  |                                         next
+       F8  |                                         next (step over)
        F10 |                                         step
        +,- |                                         창크기 조절,25% 단위로 증감 
      

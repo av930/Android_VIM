@@ -26,8 +26,6 @@ CLASSPATH_L=.:$JAVA_HOME/lib/tools.jar
 CLASSPATH=`cygpath -wp $CLASSPATH_L` 
 #INDENT_PROFILE=$HOME/.indent.pro
 
-SOLAR=10.175.203.7
-VM=192.168.52.2
 
 #VIM specific setting
 #export VIMRUNTIME=/usr/share/vim/vim73
@@ -42,3 +40,4 @@ cyan='\e[0;36m';    CYAN='\e[1;36m';
 NCOL='\e[0m';
 export red RED green GREEN yellow YELLOW blue BLUE cyan CYAN NCOL
 
+echo "[NOTICE] .profile is executed"

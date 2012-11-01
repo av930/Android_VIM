@@ -164,7 +164,7 @@ WINDOW                                                               *my_win*
 ==============================================================================
 창
     소스화면
-        전체화면                                     F6, CTRL+W o  #ZoomWin Plugin
+        전체화면                                     F5+n         #new tab
         간단글꼴                                     not supported
         심볼 Highlight                               :set hlsearch
         특수문자 보기                                :set list
@@ -319,8 +319,10 @@ FUGITIVE                                                               *my_git*
 
     좀더 많은 명령이 있으니 추가적으로 살펴보아라. :help fugitive
 	
+
 DIRDIFF                                                               *my_diff*
 ==============================================================================
+	NerdTree와 연결된  bs(base),to 명령을 이용해서 비교하길 바란다
 	2개의 파일을 비교함                              :DirDiff <dir or file> <dir or file>
 	   KEY | DESCRIPTION
        ----|-------------------------- >
@@ -377,14 +379,6 @@ GREP                                                                  *my_grep*
     검색된 결과에 신규검색 결과를 붙인다             :검색명령Add, ex) :RgrepAdd
 
 
-ZOOMWIN                                                               *my_zoom* 
-==============================================================================
-    현재 커서창을 최대/최소 토글한다.                :ZoomWin,<C-w> o, <F6>
-    현재 커서창을 닫는다.                            :<C-w> c,         <F6> c
-    모든 창을 같은 크기로                            :<C-w> =,         <F6> =
-    창 layout 이동,좌하상우                          :<F6>h, <F6>j,<F6>k,<F6>l
-
-
 OBIOUS-RESIZE                                                       *my_resize*
 ==============================================================================
     현재 커서창을 상/하/좌/우로 resize한다.  like <hjkl> key 
@@ -392,6 +386,8 @@ OBIOUS-RESIZE                                                       *my_resize*
 	가로분할시 하로                                  :<C-o>
 	가로분할시 상으로                                :<C-i>	
 	가로분할시 우로                                  :<C-p>
+
+    창 layout 이동,좌하상우                          :<F6>h, <F6>j,<F6>k,<F6>l
 
 
 NERD-TREE                                                             *my_tree*
@@ -418,6 +414,7 @@ NERD-TREE                                                             *my_tree*
 
     추가적인 명령은 NERDTree에서 :help NERDTree에서 참고
 
+
 TAGVAR                                                               *my_tag*
 ==============================================================================
     현재 파일의 symbol browsing list window toggle   :TagbarToggle, <F9>
@@ -432,16 +429,6 @@ TAGVAR                                                               *my_tag*
 	  F1   |  help
 
     
-SOURCE-EXPLORER                                                       *my_srcexpl*
-==============================================================================
-    현재 파일의 현재 cursor 위치의 symbol의 context menu toggle
-                                                     :SrcExplToggle, <F10>
-       KEY | DESCRIPTION
-       ----|-------------------------- >
-	 <CR>  |  현재창에서 해당 소스로 jump
-  <Space>  |  이전 소스위치로 복귀
-    
-
 MINI-BUFFER                                                           *my_mini*
 ==============================================================================
     현재 open된 파일(buffer)에 대한 list를 Open한다. :MiniBufExplorer, <F5>
@@ -467,6 +454,16 @@ _______________________________________________________________________________
 
 Not currently used
 _______________________________________________________________________________
+
+SOURCE-EXPLORER                                                       *my_srcexpl*
+==============================================================================
+    현재 파일의 현재 cursor 위치의 symbol의 context menu toggle
+                                                     :SrcExplToggle, <F10>
+       KEY | DESCRIPTION
+       ----|-------------------------- >
+	 <CR>  |  현재창에서 해당 소스로 jump
+  <Space>  |  이전 소스위치로 복귀
+    
 
 
 FUZZY-FINDER                                                            *my_fuzzy*
@@ -495,6 +492,14 @@ COMMAND-T                                                             *my_comman
    <C-CR>,<C-s> |  가로 분할 열기
 		  <C-v> |  세로 분할 열기
 		  <C-t> |  탭  분할 열기
+
+ZOOMWIN                                                               *my_zoom* 
+==============================================================================
+    전체화면                                         F6, CTRL+W o  #ZoomWin Plugin
+    현재 커서창을 최대/최소 토글한다.                :ZoomWin,<C-w> o, <F6>
+    현재 커서창을 닫는다.                            :<C-w> c,         <F6> c
+    모든 창을 같은 크기로                            :<C-w> =,         <F6> =
+
 
 
 "아래 line이 있어야 help file로 인식되어 coloring이 된다.

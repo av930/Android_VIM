@@ -6,8 +6,7 @@ export LC_CTYPE=C
 
 SRC_SDK=/usr/share/android-sdk-linux
 
-
-PATH=".:$PATH"
+PATH=.:~/:$SRC_SDK/platform-tools:$PATH
 
 
 export SRC_SDK

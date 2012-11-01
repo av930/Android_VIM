@@ -1,5 +1,10 @@
 #!/bin/sh
-git remote add origin git@github.com:av930/vim_setting.git
-git push -u origin master
+git remote add github git@github.com:av930/Android_VIM.git
+git push -u github master
+git pull github master
 
-git pull origin master
+git remote add bit https://av930@bitbucket.org/av930/setting_vim.git
+git push -u bit master
+git pull bit master
+
+git clone https://av930@bitbucket.org/av930/setting_vim.git

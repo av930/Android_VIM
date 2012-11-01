@@ -5,29 +5,10 @@ repo sync
 repo start cappuccino_refactoring --all
 
 
--GingerBread LAP
-repo init -u ssh://165.243.137.39:29475/platform/manifest.git -b cappuccino_refactoring
+LAP
+repo init -u ssh://lap4.lge.com:29475/platform/manifest.git -b lap_jb_release
 repo sync
-repo start cappuccino_refactoring --all
-
-
--Froyo native
-repo init -u ssh://10.175.203.7:29425/platform/manifest.git -b froyo
-repo sync
-repo start froyo --all
-
-
--allFroyo Cappuccino
-repo init -u ssh://10.175.203.7:29425/platform/manifest.git -b froyo-capu
-repo sync
-repo start froyo-capu --all
-git push lge-cappuccino HEAD:refs/for/froyo-capu
-
-
--Froyo_AnB
-repo init -u ssh://10.175.203.7:29418/manifest.git -b froyo-lge-qct
-repo sync
-repo start froyo-lge-qct --all
+repo start LAP-JB --all
 
 
 register kernel

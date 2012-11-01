@@ -1,0 +1,128 @@
+#------------------------------ cygwin -----------------------------------------
+############################### Prompt DEFINE #####################################
+
+############################### USER DEFINE #####################################
+alias ls='ls -F --color=auto --show-control-chars'
+alias grep='grep --color=auto'
+alias env='env|sort'
+alias dir='ls -al -F --color=auto| grep /'
+
+
+
+############################### DIR ALIAS #####################################
+alias code='cd D:/code_study'
+alias dev='cd c:/DevTools'
+alias src='cd D:/SRC_WORK'
+alias sdk='cd $SRC_SDK'
+alias setting='cd D:/Setting/Setting_Program'
+alias home='cd c:/Users/joongkeun.kim/'
+
+############################### Tool ALIAS #####################################
+function launch_cur_dir()
+{
+    cygpath -wp $PWD
+}
+
+alias xming='export DISPLAY=localhost:0.0'
+
+alias ue='c:/DevTools/UltraEdit/uedit32.exe'
+alias np='c:/DevTools/Notepad++/notepad++.exe'
+alias nt='rxvt -rv -sr -sw -sl 9999 -fg black -bg white -fn "Lucida Sans Typewriter" -mcc -ls -g 100X50 -e /usr/bin/bash --login -i &'
+
+alias updateDonut='rsync -auvht --port=873 172.21.74.32::$USER/mydonut/* \
+    /cygdrive/d/SRC_WORK/Donut/'
+alias updateEclair='rsync -auvht --port=873 172.21.74.32::$USER/myeclair/* \
+    /cygdrive/d/SRC_WORK/Eclair/'
+alias updateCapp='rsync -auvht --exclude-from=exclude.txt \
+    --port=873 172.21.74.32::$USER/capp/* /cygdrive/d/SRC_WORK/capp/'
+alias puttyCom='nohup putty -load "CompileServer" &'
+alias puttyFile='nohup putty -lddaoad "FileServer" &'
+alias solar='ssh $SOLAR'
+
+
+############################### ENV DEFINE ######################################
+function setup_gdb()
+{
+    adb devices
+    echo "only 1 device: enter, more than 1: -e or -d"
+    read choice
+    adb $choice forward tcp:5039 tcp:5039
+    adb $choice shell ps
+    echo -n "Which process? with & for background:"
+    read process_id
+    adb $choice shell gdbserver :5039 --attach $process_id
+}
+
+function start_gdb()
+{
+    if [ "$1" == "" ]; then echo [WARNING] plz input $PRODUCT_OUT/symbols/system/xxx & return ;fi
+   
+    # should be ndk gdb for windows
+    if [ "${OSTYPE}" == "cygwin" ]; then
+        local GDB=/cygdrive/d/SDK/Android/android-ndk-r8b/toolchains/arm-linux-androideabi-4.6/prebuilt/windows/bin/arm-linux-androideabi-gdb.exe
+    else
+	local GDB=prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.6/bin/arm-linux-androideabi-gdb
+    fi
+    
+    # should be product dir
+    local OUT_SYMBOLS=$(expr match "$1" '\(.*symbols\)')
+    local OUT_SO_SYMBOLS=$OUT_SYMBOLS/system/lib
+
+   
+
+
+   echo >|"gdbclient.cmds" "set solib-absolute-prefix $OUT_SYMBOLS"
+   echo >>"gdbclient.cmds" "set solib-search-path $OUT_SO_SYMBOLS:$OUT_SO_SYMBOLS/hw:$OUT_SO_SYMBOLS/ssl/engines"
+   echo >>"gdbclient.cmds" "target remote $2:5039"
+   echo >>"gdbclient.cmds" ""
+
+   cat "gdbclient.cmds"
+   echo "cgdb -d $GDB -x gdbclient.cmds $1"
+   cgdb -d $GDB -x "gdbclient.cmds" $1
+
+}
+
+alias set_lint='LARCH_PATH=$DEVTOOLS/GnuTool/SPLint/lib;
+                LCLIMPORTDIR=$DEVTOOLS/GnuTool/SPLint/imports;
+                PATH=$DEVTOOLS/GnuTool/SPLint/bin:$PATH'
+
+alias show_path='echo $PATH|sed "s/:/:\n/g"'
+
+function set_ics(){
+    export PATH=${SRC_SDK}/platform-tools:${SRC_SDK}/tools:$PATH;
+    export ANDROID_PRODUCT_OUT=${SRC_FULL}/out/target/product/generic
+    export USE_CYGWIN=1 #refer HOST_windows-x86.mk for cygwin building 
+
+}
+
+alias set_froyo='export PATH=${SRC_SDK}10/platform-tools:${SRC_SDK}10/tools:$PATH'
+
+
+
+############################### Utility #####################################
+function vim(){
+    VIMINIT=":so ~/.vim1/.vimrc" MYVIMRC=":so ~/.vim1/.vimrc" vi $*
+}
+
+function vino(){
+    VIMINIT=":so ~/.xxx" MYVIMRC=":so ~/.xxx" vi $*
+}
+
+
+
+
+function findgrep() { find . -name $1 -print | xargs grep -e "$2";}
+function findrm()
+{
+    if [ "$1" == "" ]; then echo [WARNING] plz input filename!!
+    else find . -name "$1" -exec rm -rf \{\} \;
+    fi
+}
+
+alias scp_echo='echo scp-get;echo "scp joongkeun.kim@100.1.1.1:/home/joongkeun.kim/filename . ";echo scp filename joongkeun.kim@$SOLAR:/home/joongkeun.kim'
+
+
+
+
+# If not running interactively, don't do anything
+[[ "$-" != *i* ]] && return

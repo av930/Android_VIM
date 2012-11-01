@@ -97,7 +97,7 @@ let &runtimepath.= ',' .s:VIMRC_ROOT_VUNDLE
 "vundle path 변경, default는 .vim/
 call vundle#rc(s:VIMRC_ROOT_BUNDLE)
 "plugin
-"let g:vundle_default_git_proto = 'git'
+let g:vundle_default_git_proto = 'git'
 
 "this string should be same to http://github.com/~
 "ex) http://github.com/gmarik/vundle
@@ -114,7 +114,6 @@ Bundle 'vundle'
 Bundle 'The-NERD-Commenter'
 
 "window control
-Bundle 'ZoomWin'
 Bundle 'obvious-resize'
 
 "searching
@@ -126,7 +125,6 @@ Bundle 'fugitive.vim'
 Bundle 'fholgado/minibufexpl.vim'
 Bundle 'The-NERD-tree'
 Bundle 'Tagbar'
-Bundle 'SrcExpl'
 Bundle 'DirDiff.vim'
 
 "FileType
@@ -140,16 +138,16 @@ Bundle 'Wombat'
 Bundle 'peaksea'
 
 
+"Bundle 'ZoomWin'
 "Bundle 'FuzzyFinder'
 "Bundle 'L9'
 "Bundle 'Command-T'
-"Bundle 'minibufexplorerpp'
+"Bundle 'SrcExpl' "VI 기본 기능으로 충분하다.
 
 
 "-------------------------------------------------------------------------------"
 nnoremap <silent> <F7>hh :help my_vundle<CR> 
-nnoremap <silent> <F7>  :Bundles<CR> 
-nnoremap <silent> <F7>l :BundleList<CR> 
+nnoremap <silent> <F7>  :BundleList<CR> 
 nnoremap <silent> <F7>c :BundleClean!<CR> 
 nnoremap <silent> <F7>i :BundleInstall<CR> 
 nnoremap <silent> <F7>u :BundleInstall!<CR> 
@@ -460,17 +458,21 @@ let g:tagbar_updateonsave_maxlines=8000 "5000, 5000라인 이하 파일저장시
 endif
 
 
-if 1 "conflict to minibuffexpl, so window layout corrupt   
+let g:loaded_srcexpl=1 "if it is defined, it is disabled
+if 0 "Press ENTER or type command to continue, when run SrcExpl
 "==============================================================================="
 " Source Explorer
 "-------------------------------------------------------------------------------"
 ""The switch of the Source Explorer
 nnoremap <F10>hh :help srcexpl<CR>
-nnoremap <F10> :SrcExplToggle<CR>
+"nnoremap <F10> :SrcExplToggle<CR>
+"bugfix: Press ENTER or type command to continue, when run SrcExpl only one-time
+nnoremap <F10> :SrcExplToggle<CR>:call g:SrcExpl_Refresh()<CR>
+nnoremap <F10>c :SrcExplClose<CR>
+nnoremap <F10>l :call g:SrcExpl_GoBack()<CR>
 
-"let g:loaded_srcexpl=0 "if it is defined, it is disabled
-let g:SrcExpl_winHeight = 8 "Set the height of Source Explorer window
-let g:SrcExpl_refreshTime = 100 "Set 100 ms for refreshing the Source Explorer
+"let g:SrcExpl_winHeight = 8 "Set the height of Source Explorer window
+let g:SrcExpl_refreshTime = 500 "Set 100 ms for refreshing the Source Explorer
 let g:SrcExpl_jumpKey = "<ENTER>" "Set Enter key to jump into the exact definition context
 let g:SrcExpl_gobackKey = "<SPACE>" "Space key for back from the definition context
 
@@ -502,7 +504,7 @@ let g:SrcExpl_isUpdateTags = 0
 endif
 
 
-if 1
+if 0 "ZoomWin is not necessary, if you want to maximize, make new tab for current file
 "==============================================================================="
 " ZoomWin 
 "-------------------------------------------------------------------------------"
@@ -515,7 +517,12 @@ nmap <F6> <C-w>o
 nmap <F6>c <C-w>c
 " make all window same size
 nmap <F6>= <C-w>=
+"_______________________________________________________________________________
+endif
 
+if 1
+"==============================================================================="
+" Obvious Resize
 "-------------------------------------------------------------------------------"
 "move window layout
 "lefthandside, downward, upward, righthandsie 
@@ -547,11 +554,13 @@ if 1 "minibufexpl이 nerdtree등과 동작할때 2개의 window를 만드는 버
 nnoremap <silent> <F5> :MiniBufExplorer<CR>
 nnoremap <silent> <F5><F5> :CMiniBufExplorer<CR>
 
+"miniBufExplorer 2개 이상 뜨는 버그 수정으로 splitbelow를 선언해야 한다.
 set splitbelow "default window 배치 설정: 선언시 상하
+
 let g:miniBufExplSplitBelow=0  "0:up or left, 1: below or right
 let g:miniBufExplSplitToEdge=1
 "let g:miniBufExplVSplit = 20 "가로 정렬일때 Height
-let g:miniBufExplorerMoreThanOne =5 "buffer가 2개 이상일때만 load되도록
+let g:miniBufExplorerMoreThanOne =2 "buffer가 2개 이상일때만 load되도록
 let g:miniBufExplMapWindowNavVim =1 "0, "ctrl+hjkl window move"
 "let g:miniBufExplMapWindowNavArrows  "1, "ctrl+arrow window move"
 "let g:miniBufExplMapCTabSwitchBufs  "1, "ctrl+tab buffer move"

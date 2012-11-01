@@ -1,0 +1,51 @@
+#to set default tool
+#git config --global diff.tool bc
+#git config --global merge.tool win
+
+[github]
+	user = av930
+	token = 7cd27e7201d3edc8d482c97c4b89441e
+    [user]
+	name = av930
+	email = av9300@gmail.com
+################################################################################	
+[color]
+	ui = auto
+[diff]
+	tool = bc
+[difftool]
+	prompt = false
+[difftool "bc"]
+	cmd = ~/gittool/beyondcompare-diff.sh \"$LOCAL\" \"$REMOTE\"
+[difftool "diff"]
+	cmd = ~/gittool/diffmergetool.sh \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"
+	trustExitCode = false
+[difftool "vi"]
+	cmd = vi -f '+next' '+execute \"DirDiff\" argv(0) argv(1)' \"$LOCAL\" \"$REMOTE\" 
+
+
+[merge]
+	tool = bc
+[mergetool]
+	prompt = false
+[mergetool "bc"]
+	cmd = ~/gittool/beyondcompare-merge.sh \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"
+[mergetool "diff"]
+	cmd = ~/gittool/diffmergetool.sh \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"
+
+
+
+
+[url "git://git.omapzoom.org/tools/repo"]
+	insteadOf = http://android.git.kernel.org/tools/repo
+[url "git://git.omapzoom.org/tools/repo"]
+	insteadOf = git://android.git.kernel.org/tools/repo
+
+#git config --global core.autocrlf input
+[core]
+	autocrlf = input
+	safecrlf = true
+
+[alias]
+	df = difftool -t bc
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset %C(blue)<%an>%Creset' --abbrev-commit --date=relative

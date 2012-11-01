@@ -1,0 +1,50 @@
+#to set default tool
+#git config --global diff.tool bc
+#git config --global merge.tool win
+
+
+[user]
+	name = joongkeun.kim
+	email = joongkeun.kim@lge.com
+
+	
+################################################################################	
+[color]
+	ui = auto
+[diff]
+    tool = p4merge
+    #tool = vimdiff
+
+[difftool "p4merge"]
+    cmd = p4merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+    keepTemporaries = false
+    trustExitCode = false
+    keepBackup = false
+
+[difftool "vi"]
+	cmd = vi -f '+next' '+execute \"DirDiff\" argv(0) argv(1)' \"$LOCAL\" \"$REMOTE\" 
+
+[merge]
+    keepBackup = false;
+    tool = p4merge
+[mergetool "p4merge"]
+    cmd = p4merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+    keepTemporaries = false
+    trustExitCode = false
+    keepBackup = false
+[url "git://git.omapzoom.org/tools/repo"]
+	insteadOf = http://android.git.kernel.org/tools/repo
+[url "git://git.omapzoom.org/tools/repo"]
+	insteadOf = git://android.git.kernel.org/tools/repo
+[gui]
+	encoding = cp949
+	
+#git config --global core.autocrlf input
+[core]
+	autocrlf = input
+	safecrlf = true
+
+[alias]
+	df = difftool -t bc
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset %C(blue)<%an>%Creset' --abbrev-commit --date=relative
+	tagcurrent = git describe --tags --abbrev=0 --match 

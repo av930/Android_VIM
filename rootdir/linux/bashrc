@@ -1,0 +1,170 @@
+#------------------------------ linux -----------------------------------------
+############################### Prompt DEFINE #####################################
+# KJK_TALK:   PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+# \u : username, \h : hostname
+case "$TERM" in
+xterm*|rxvt*)
+    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1 "
+    ;;
+*)
+    ;;
+esac
+
+############################### USER DEFINE #####################################
+alias ls='ls -F --color=auto --show-control-chars'
+alias grep='grep --color=auto'
+alias env='env|sort'
+alias dir='ls -al -F --color=auto| grep /'
+
+
+
+############################### DIR ALIAS #####################################
+
+
+
+############################### Tool ALIAS #####################################
+function launch_cur_dir()
+{
+    ip_addr=$(hostname -i)
+    pwd|sed "s:home:\/$ip_addr:"|sed 's:\/:\\:g'
+}
+
+function xming()
+{
+    Command=$(w|awk '/joongkeu/ {print $3}' |sort -u); 
+    export DISPLAY=${Command}:0.0
+}
+
+
+alias dl='sudo repquota -as'
+
+
+############################### ENV DEFINE ######################################
+function setup_gdb()
+{
+    adb devices
+    echo "only 1 device: enter, more than 1: -e or -d"
+    read choice
+    adb $choice forward tcp:5039 tcp:5039
+    adb $choice shell ps
+    echo -n "Which process? with & for background:"
+    read process_id
+    adb $choice shell gdbserver :5039 --attach $process_id
+}
+
+function start_gdb()
+{
+    if [ "$1" == "" ]; then echo [WARNING] plz input $PRODUCT_OUT/symbols/system/xxx & return ;fi
+   
+    # should be ndk gdb for windows
+    if [ "${OSTYPE}" == "cygwin" ]; then
+        local GDB=/cygdrive/d/SDK/Android/android-ndk-r8b/toolchains/arm-linux-androideabi-4.6/prebuilt/windows/bin/arm-linux-androideabi-gdb.exe
+    else
+	local GDB=prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.6/bin/arm-linux-androideabi-gdb
+    fi
+    
+    # should be product dir
+    local OUT_SYMBOLS=$(expr match "$1" '\(.*symbols\)')
+    local OUT_SO_SYMBOLS=$OUT_SYMBOLS/system/lib
+
+   
+
+
+   echo >|"gdbclient.cmds" "set solib-absolute-prefix $OUT_SYMBOLS"
+   echo >>"gdbclient.cmds" "set solib-search-path $OUT_SO_SYMBOLS:$OUT_SO_SYMBOLS/hw:$OUT_SO_SYMBOLS/ssl/engines"
+   echo >>"gdbclient.cmds" "target remote $2:5039"
+   echo >>"gdbclient.cmds" ""
+
+   cat "gdbclient.cmds"
+   echo "cgdb -d $GDB -x gdbclient.cmds $1"
+   cgdb -d $GDB -x "gdbclient.cmds" $1
+
+}
+
+    
+function java15()
+{
+JAVA_HOME=$JAVA_15HOME
+CLASSPATH=$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib/activation.jar
+PATH=.:$JAVA_HOME/bin:$PATH
+}
+
+
+function java16()
+{
+JAVA_HOME=$JAVA_16HOME
+CLASSPATH=$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib/activation.jar
+PATH=.:$JAVA_HOME/bin:$PATH
+}
+
+############################### Utility #####################################
+function vim(){
+    VIMINIT=":so ~/.vim1/.vimrc" MYVIMRC=":so ~/.vim1/.vimrc" vi $*
+}
+
+function vino(){
+    VIMINIT=":so ~/.xxx" MYVIMRC=":so ~/.xxx" vi $*
+}
+
+
+
+
+function findgrep() { find . -name $1 -print | xargs grep -e "$2";}
+function findrm()
+{
+    if [ "$1" == "" ]; then echo [WARNING] plz input filename!!
+    else find . -name "$1" -exec rm -rf \{\} \;
+    fi
+}
+
+alias scp_echo='echo scp-get;echo "scp joongkeun.kim@100.1.1.1:/home/joongkeun.kim/filename . ";echo scp filename joongkeun.kim@$SOLAR:/home/joongkeun.kim'
+
+
+function show_menu_do(){
+## ---------------------------------------------------------------------------
+# show the menu and make user select one from it.
+
+local lines
+#should be up one token
+lines=($1)
+if [[ ${#lines[@]} = 0 ]]; then
+    echo "Not found"
+    return 1
+fi
+local pathname
+local choice
+if [[ ${#lines[@]} > 1 ]]; then
+    while [[ -z "$pathname" ]]; do
+        local index=1
+        local line
+        for line in ${lines[@]}; do
+            printf "%6s %s\n" "[$index]" $line
+            index=$(($index + 1))
+        done
+        echo
+        echo -n "Select one: "
+        unset choice
+        read choice
+        if [[ $choice -gt ${#lines[@]} || $choice -lt 1 ]]; then
+            echo "Invalid choice"
+            continue
+        fi
+        pathname=${lines[$(($choice-1))]}
+    done
+else
+    # even though zsh arrays are 1-based, $foo[0] is an alias for $foo[1]
+    pathname=${lines[0]}
+fi
+ RET=$pathname
+ return 0
+}
+
+function out(){
+local INPUT
+INPUT=$(find ~/ -maxdepth 3 -type d -name "out*" -exec \
+    find {}/target/product -mindepth 1 -maxdepth 1 -type d \; 2> /dev/null)
+show_menu_do "$INPUT"
+cd ${RET} 
+}
+
+

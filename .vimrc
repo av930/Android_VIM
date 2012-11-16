@@ -549,7 +549,7 @@ if 1 "minibufexpl이 nerdtree등과 동작할때 2개의 window를 만드는 버
 "-------------------------------------------------------------------------------"
 " 열린 파일 리스트 보여주기
 
-"nnoremap <silent> <F5>hh :help my_mini<CR> 
+nnoremap <silent> <F5>hh :help my_mini<CR> 
 "nnoremap <silent> <F5> :TMiniBufExplorer<CR>
 nnoremap <silent> <F5> :MiniBufExplorer<CR>
 nnoremap <silent> <F5><F5> :CMiniBufExplorer<CR>
@@ -662,7 +662,7 @@ endif
 
 " tabs
 "-------------------------------------------------------------------------------"
-noremap <F5>hh :help my_tab<cr>
+"noremap <F5>hh :help my_mini<cr>
 " create a new tab
 noremap <F5>n :tabnew %<cr>
 noremap <LocalLeader>tn :tabnew %<cr>
@@ -1175,10 +1175,11 @@ autocmd FileType c,cpp,java set mps+==:;
 "favorites 
 "=============================================================================="
 ":echo $MYVIMRC
+let g:myhelp="~/.vim/doc/rock.txt"
 nmap <silent> <F1>hh :help my_help<CR>
 nmap <silent> <F1>e :e $MYVIMRC<CR>
 nmap <silent> <F1>r :so $MYVIMRC<CR>
-nmap <silent> <F1>m :exe "e " .g:vim_root_path .'doc/rock.txt'<CR>
+nmap <silent> <F1>m :exe "e " .g:myhelp <CR>
 nmap <silent> <F1>l :call LaunchShell()<CR>
 "help: update new help tags
 nmap <F1>u :helptags ~/.vim/doc <CR>
@@ -1210,9 +1211,10 @@ function! ToggleVimTips()
         bd "rock.txt"
     else
         let g:MyVimTips="on"
-        echo g:MyVimTips
-        "pedit ~/.vim/doc/rock.txt
-        help my
+        "bo help my "for bottom or right help
+        "to help my "for up or left help
+        vert bo help my "for veritacal bottom or right help 
+        "tab help my "for tab help
     endif
 endfunction
 

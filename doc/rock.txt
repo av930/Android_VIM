@@ -195,18 +195,6 @@ WINDOW                                                               *my_win*
     general 창간이동                                 CTRL+   ←↑→↓ #(화살표) 창이 존재하는 대로 이동
         editor 복귀                                  CTRL+   ←↑→↓   
 
-TAB-BUFF                                                          		*my_tab*
-==============================================================================
-	 이전 TAB으로 이동                   			 F5+  h
-     다음 TAB으로 이동                   			 F5+  l 
-	 TAB닫기                             			 F5+  c 
-	 new TAB 생성                        			 F5+  n
-     -------------------------------                                   |my_mini|                 
-	 BUFF list open                         		 F5
-	 BUFF list close                         		 F5+F5     #두번누르면 close
-	 이전 BUF으로 이동                   			 F5+  k 
-     다음 BUF으로 이동                   			 F5+  j
-
 
 CGDB                                                             		*my_gdb*
 ==============================================================================
@@ -431,10 +419,13 @@ TAGVAR                                                               *my_tag*
     
 MINI-BUFFER                                                           *my_mini*
 ==============================================================================
-    현재 open된 파일(buffer)에 대한 list를 Open한다. :MiniBufExplorer, <F5>
-    현재 open된 파일(buffer)에 대한 list를 토글한다. :CMiniBufExplorer, <F5><F5>
+    현재 open된 파일(buffer)에 대한 list를 Control한다.
+    list Open                                        :MiniBufExplorer , <F5>
+    list Close                                       :CMiniBufExplorer, <F5><F5>
+	이전 BUF으로 이동                   			 <F5> k 
+    다음 BUF으로 이동                   			 <F5> j
 
-       KEY | DESCRIPTION
+       KEY | DESCRIPTION(list Open 상태에서)
        ----|-------------------------- >
     :bn/bp | next buffer/ previous buffer
 	:[N]b  | 해당 buffer를 바로 연다
@@ -446,8 +437,11 @@ MINI-BUFFER                                                           *my_mini*
 	    v  | buffer vertical split open
 	<C-h,j,k,l> | window move:w
 
-
-
+"
+	 이전 TAB으로 이동                   			 <F5> h
+     다음 TAB으로 이동                   			 <F5> l 
+	 TAB닫기                             			 <F5> c 
+	 new TAB 생성                        			 <F5> n
 
 
 _______________________________________________________________________________

@@ -38,7 +38,7 @@ alias updateCapp='rsync -auvht --exclude-from=exclude.txt \
 alias puttyCom='nohup putty -load "CompileServer" &'
 alias puttyFile='nohup putty -lddaoad "FileServer" &'
 alias solar='ssh $SOLAR'
-
+alias byobu='byobu -U'
 
 ############################### ENV DEFINE ######################################
 function setup_gdb()

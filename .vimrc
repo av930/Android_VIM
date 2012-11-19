@@ -1211,10 +1211,19 @@ function! ToggleVimTips()
         bd "rock.txt"
     else
         let g:MyVimTips="on"
-        "bo help my "for bottom or right help
-        "to help my "for up or left help
-        vert bo help my "for veritacal bottom or right help 
-        "tab help my "for tab help
+
+        ""for bottom or right help
+        bo help my 
+        
+        ""for up or left help
+        "to help my 
+	
+	    ""for veritacal bottom or right help 
+        "vert bo help my 
+        
+        ""for tab help
+        "tab help my 
+
     endif
 endfunction
 

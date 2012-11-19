@@ -37,7 +37,7 @@ function xming()
 
 
 alias dl='sudo repquota -as'
-
+alias byobu='byobu -U'
 
 ############################### ENV DEFINE ######################################
 function setup_gdb()

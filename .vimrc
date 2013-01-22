@@ -45,15 +45,17 @@ if 1 "android setting
 "==============================================================================="
 function! FUNC_FindRoot()
     let cur_dir = getcwd()
-    while cur_dir != "/"
-        if filereadable(cur_dir . "/build/envsetup.sh") 
-            return cur_dir 
+    let temp_dir = cur_dir
+    while temp_dir != "/"
+        if filereadable(temp_dir . "/build/envsetup.sh") 
+            return temp_dir 
+        elseif filereadable(temp_dir . "/../android/build/envsetup.sh") 
+            return temp_dir 
         else
             cd ..
-            let cur_dir = getcwd()
+            let temp_dir = getcwd()
         endif
     endwhile
-    let cur_dir=g:vim_root_path
     return cur_dir
 endfunction
 
@@ -695,7 +697,7 @@ nmap <F12>0 :tn<cr>
 "set tags=tags,TAGS,$PWD/tags,$HOME/.vim/tags
 set tags=tags,TAGS
 execute "set tags+=".g:RootDir."/tags"
-set tags+=$HOME/.vim/tags
+"set tags+=$HOME/.vim/tags
 "set tags+=FUNC_ctags_create()
 
 
@@ -706,14 +708,15 @@ nmap <F12>c :call FUNC_ctags_create()<cr>
 "reference: 현재 cursor의 symbol이 jump할수 있는 list보여주기
 nmap <F12>r :call FUNC_ctags_jumpsplit()<cr>
 
-    func! FUNC_ctags_create()
-        exe "!$HOME/.vim/myctags.sh" g:RootDir
-    endfunc
+func! FUNC_ctags_create()
+    exe "!$HOME/.vim/myctags.sh" g:RootDir
+endfunc
 
-    func! FUNC_ctags_jumpsplit()
-        let st = expand("<cword>")
-        exe "sts ".st
-    endfunc
+func! FUNC_ctags_jumpsplit()
+    let st = expand("<cword>")
+    exe "tag /^".st
+endfunc
+
 endif
 "_______________________________________________________________________________
 endif
@@ -1211,19 +1214,11 @@ function! ToggleVimTips()
         bd "rock.txt"
     else
         let g:MyVimTips="on"
-
-        ""for bottom or right help
-        bo help my 
-        
-        ""for up or left help
-        "to help my 
-	
-	    ""for veritacal bottom or right help 
-        "vert bo help my 
-        
-        ""for tab help
-        "tab help my 
-
+        "bo help my "for bottom or right help
+        "to help my "for up or left help
+        "for veritacal bottom or right help 
+        vert bo help my
+        "tab help my "for tab help
     endif
 endfunction
 

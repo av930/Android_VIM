@@ -137,11 +137,12 @@ SEARCH                                                               *my_find*
 		incremental 찾기                             set incsearch  #.vimrc setting으로 해결해야 함
 		특정 dir이하 심볼 찾기                       F3             #grep.vim
         전체프로젝트 심볼 찾기                       F12 + r        #ctag reference
-		caller 찾기                                  <leader>csp    #CScope
-
+													 :tag /^symbol$ #regular expression으로 DB 검색
 		찾은 결과 List                               F12 + l        #ctag list
 		찾은 결과 하나씩 다음 이동                   F12 + 0        #ctag next
 		찾은 결과 하나씩 뒤로 이동                   F12 + 9        #ctag prev
+		caller 찾기                                  <leader>csp    #CScope
+		
 	바꾸기
 		파일내 문자열 바꾸기	                     :시작,끝 s/old/new/[cgi] #시작=[숫자|.],  끝=[숫자|.|$]
 			                                                        #c=물어보기,g=모두, i=대소문자없이

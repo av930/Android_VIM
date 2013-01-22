@@ -37,6 +37,7 @@ function xming()
 
 
 alias dl='sudo repquota -as'
+alias du='du -sh'
 alias byobu='byobu -U'
 
 ############################### ENV DEFINE ######################################

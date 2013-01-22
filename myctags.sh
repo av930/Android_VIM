@@ -1,10 +1,14 @@
 #!/bin/bash
+DIRS=$1
 TAGS=tags 
-echo "$1/$TAGS will be created!"
+echo "$DIRS/$TAGS will be created!"
 echo "$1/$TAGS will be created!" > /dev/null
 pushd $1
+
 #should be asked whether TAGS is to be deleted or not
 if [ -f ${TAGS} ]; then rm -f ${TAGS}; fi
+
+if [ "${DIRS##*/}" = "android" ];then
 time ctags -f ${TAGS}\
 	--languages=C,C++,Asm,Java,Sh,Make,Python\
     --exclude=*.{js,html,htm,css,php,guess,log,txt}	\
@@ -31,6 +35,15 @@ if [ "CYGWIN" = "$(uname | grep CYGWIN -o)" ];then
     echo " running on cygwin"
     cat ${TAGS} | sed '1,/^\!/d' > ${TAGS}_
     mv ${TAGS}_ ${TAGS}
+fi
+
+else # if android
+    
+time ctags -f ${TAGS}\
+	--languages=C,C++,Asm,Java,Sh,Make,Python\
+    --exclude=*.{js,htm,css,php,guess,log,txt}	\
+    --sort=foldcase             \
+	-R	
 fi
 popd
 

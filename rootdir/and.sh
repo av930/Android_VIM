@@ -41,10 +41,18 @@ cat << PREFACE
 PREFACE
 printf ${NCOL}
 
+OS_TYPE='unknown'
+if [ $(expr match "$OSTYPE" 'cygwin') -ne 0 ]; then OS_TYPE='windows'
+elif [ $(expr match "$OSTYPE" 'linux') -ne 0 ]; then OS_TYPE='linux'
+elif [ $(expr match "$OSTYPE" 'freebsd') -ne 0 ]; then OS_TYPE='bsd'
+elif [ $(expr match "$OSTYPE" 'darwin') -ne 0 ]; then OS_TYPE='mac'
+fi
 
 
-
-
+if [ "${OS_TYPE}" == "windows" ];then 
+    BAT=.bat
+    EXE=.exe
+fi
 
 ##--------------------------- Build Functions --------------------------------
 ##============================================================================
@@ -103,7 +111,7 @@ function run_emul(){
     done
     printf ${NCOL}
 
-    GOLDFISH=${start_dir}/goldfish/zImage
+    GOLDFISH=${start_dir}/kernel_goldfish/zImage
     IMG_DIR=out/target/product
     if ! [ -d $IMG_DIR ]; then
         IMG_DIR=${start_dir}/${IMG_DIR}
@@ -115,13 +123,13 @@ function run_emul(){
     show_menu_do "$INPUT"
     echo $RET
 
-    android.bat list avd
+    android${BAT} list avd 
     read -p "input AVD Name: " -e -i I15W INPUT_AVD
 
     DEF_OPT="-no-boot-anim -nojni -debug-init"
     echo "ex) -qemu -s, -no-cache, -sdcard filename, -ramdisk filename"
     echo "ex) -wipe-data, -debug all,-qemud,-sensors, "
-    echo "ex) -show-kernel"
+    echo "ex) -logcat '*:v' -show-kernel -qemu -monitor telnet::4444,server -s"
 	echo "ex) -logcat [v|d|i|w|e|s]"
 
     echo "ex) -partition-size 256, for adb remount"
@@ -129,6 +137,8 @@ function run_emul(){
     
     set -x
     emulator @${INPUT_AVD} -kernel ${GOLDFISH} -system ${RET} -data ${RET%/*}/userdata.img -ramdisk ${RET%/*}/ramdisk.img $INPUT_OPT&
+    #emulator @${INPUT_AVD} -system ${RET} -data ${RET%/*}/userdata.img -ramdisk ${RET%/*}/ramdisk.img $INPUT_OPT&
+    #(echo stop; cat -) | telnet localhost 4444 > /dev/tty &
     set +x
  }
 
@@ -136,7 +146,7 @@ function run_emul(){
 function run_ddms(){
 ## ---------------------------------------------------------------------------
 	echo run ddms.bat
-    ddms.bat&
+    ddms${BAT}&
     return 1
 }
 
@@ -144,8 +154,12 @@ function run_ddms(){
 function create_avd(){
 ## ---------------------------------------------------------------------------
 
+if [ "${OS_TYPE}" == "windows" ];then 
     echo ${SRC_SDK}/"AVD Manager.exe"&
     ${SRC_SDK}/"AVD Manager.exe"&
+else 
+    android &
+fi
     return 1
 }
 
@@ -153,13 +167,18 @@ function create_avd(){
 function create_sd(){
 ## ---------------------------------------------------------------------------
 	echo all SD card List
-	ls -hs  ${SRC_SDK}/../AVD/*.iso
+    if [ "${OS_TYPE}" == "windows" ];then 
+        SDCARD_PATH=$(cygpath -wp ${SRC_SDK}/../AVD/${SD_NAME}.iso)
+    else 
+        SDCARD_PATH=$(~/${SD_NAME}.iso)
+    fi
+	ls -hs  ${SDCARD_PATH}
 
 	read -p "put a sdcard size ex(16M or 2G): " SD_SIZE
     read -p "put a sdcard name ex(SD36M): " SD_NAME
 
-    echo  "mksdcard ${SD_SIZE} $(cygpath -wp ${SRC_SDK}/../AVD/${SD_NAME}.iso)"
-    mksdcard ${SD_SIZE} $(cygpath -wp ${SRC_SDK}/../AVD/${SD_NAME}.iso)
+    echo  "mksdcard ${SD_SIZE} ${SDCARD_PATH}"
+    mksdcard ${SD_SIZE} ${SDCARD_PATH}
     return 1
 }
 
@@ -167,7 +186,7 @@ function create_sd(){
 function update_sdk(){
 ## ---------------------------------------------------------------------------
     echo ${SRC_SDK}/"SDK Manager.exe"&
-    ${SRC_SDK}/"SDK Manager.exe"&
+    android
     return 1
 }
 

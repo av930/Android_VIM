@@ -25,7 +25,7 @@ alias dir='ls -al -F --color=auto| grep /'
 ############################### Tool ALIAS #####################################
 function launch_cur_dir()
 {
-    ip_addr=$(hostname -i)
+    ip_addr=$(hostname -I |cut  -f1 -d' ')
     pwd|sed "s:home:\/$ip_addr:"|sed 's:\/:\\:g'
 }
 
@@ -39,7 +39,7 @@ function xming()
 alias dl='sudo repquota -as'
 alias du='du -sh'
 alias byobu='byobu -U'
-
+alias byebu="screen -ls | grep Detached | awk '{print $1}' | xargs -i screen -X -S {} quit"
 ############################### ENV DEFINE ######################################
 function setup_gdb()
 {

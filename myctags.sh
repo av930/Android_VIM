@@ -8,11 +8,14 @@ pushd $1
 #should be asked whether TAGS is to be deleted or not
 if [ -f ${TAGS} ]; then rm -f ${TAGS}; fi
 
-if [ "${DIRS##*/}" = "android" ];then
+if [ "${DIRS##*/}" = "android" ] || [ -f "${DIRS}/build/envsetup.sh" ];then
+echo Hello android!!
 time ctags -f ${TAGS}\
 	--languages=C,C++,Asm,Java,Sh,Make,Python\
     --exclude=*.{js,html,htm,css,php,guess,log,txt}	\
     --sort=foldcase             \
+    --fields=+iaS \
+    --extra=+q \
 	-R	\
 	abi			\
 	build			\
@@ -39,6 +42,7 @@ fi
 
 else # if android
     
+echo Hello Others!!
 time ctags -f ${TAGS}\
 	--languages=C,C++,Asm,Java,Sh,Make,Python\
     --exclude=*.{js,htm,css,php,guess,log,txt}	\

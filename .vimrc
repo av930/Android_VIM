@@ -556,6 +556,11 @@ nnoremap <silent> <F5>hh :help my_mini<CR>
 nnoremap <silent> <F5> :MiniBufExplorer<CR>
 nnoremap <silent> <F5><F5> :CMiniBufExplorer<CR>
 
+function! MiniBufWinFix()
+    call CMinibufExplorer()
+    let longest = max(map(range(1, line('$')), "virtcol([v:val, '$'])"))
+    exec "vertical resize " . (longest+4)
+endfunction 
 "miniBufExplorer 2개 이상 뜨는 버그 수정으로 splitbelow를 선언해야 한다.
 set splitbelow "default window 배치 설정: 선언시 상하
 
@@ -687,9 +692,22 @@ if 1
 "==============================================================================="
 "ctags"
 "-------------------------------------------------------------------------------"
-nmap <F11> <C-t>
+if version >= 600
+
+"setting for basic operation
 nmap <F12>hh :help my_find<cr>
+"create: ctag create
+nmap <F12>c :call FUNC_ctags_create()<cr>
+nmap <F12><F12> <C-t>
 nmap <F12> <C-]>
+"reference: 현재 cursor의 symbol과 비슷한 symbol defintion 찾기, regexp
+nmap <F12>s :call FUNC_ctags_search()<cr>
+
+"setting for view
+"definition preview in horizontal/vertical/tab 
+nmap <F12>v <C-W><C-]>
+nmap <F12>vv :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
+nmap <F12>vt :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 "이전 검색한 symbol이 jump할수 있는 list보여주기
 nmap <F12>l :ts<cr>
 nmap <F12>9 :tp<cr>
@@ -702,62 +720,70 @@ execute "set tags+=".g:RootDir."/tags"
 
 
 "generate absolute path to using ctags at any directory"
-if version >= 600
-"create: ctag create
-nmap <F12>c :call FUNC_ctags_create()<cr>
-"reference: 현재 cursor의 symbol이 jump할수 있는 list보여주기
-nmap <F12>r :call FUNC_ctags_jumpsplit()<cr>
+    func! FUNC_ctags_create()
+        exe "!echo [ctag will be created, enter to continue, or Ctrl-C]"
+        exe "!$HOME/.vim/myctags.sh" g:RootDir
+    endfunc
 
-func! FUNC_ctags_create()
-    exe "!$HOME/.vim/myctags.sh" g:RootDir
-endfunc
-
-func! FUNC_ctags_jumpsplit()
-    let st = expand("<cword>")
-    exe "tag /^".st
-endfunc
+    func! FUNC_ctags_search()
+        let st = expand("<cword>")
+        exe "tag /^".st
+    endfunc
 
 endif
 "_______________________________________________________________________________
 endif
 
 
-if 0 "cscope는 data가 크고 느려서 쓰는것을 추천하지 않는다
+if 1 "cscope는 data가 크고 느려서 쓰는것을 추천하지 않는다
 "==============================================================================="
 "cscope"
 "-------------------------------------------------------------------------------"
+" cs show : cscope tag 위치 보기
 " cscope cfg"
 set csprg=/usr/bin/cscope "which cscope" 
-set csto=0
+"cscope와 ctag를 하나의 key 쓰기=0, 각각 쓰기=1
+set csto=1
+"cst가 설정되면 ctag와 cscope 둘다 search
 set cst
+set cscopequickfix=s-,c-,d-,i-,t-,e-,g-
 set nocsverb
+exe "cs add " . g:RootDir . "/cscope.out" 
+"make verbose
+set csverb
+"""" basic operation
+nmap <F11>l :copen<cr>
+nmap <F11>9 :tp<cr>
+nmap <F11>0 :tn<cr>
+nmap <F11><F11> <C-t>
 
+nmap <F11>hh  :help my_cscope<cr>
+nmap  <F11>c  :call FUNC_cscope_create()<cr>
 
+"""" cscope search
+nmap  <F11>   :call FUNC_cscope_search()<cr>
+"text search
+nmap  <F11>s  :cs find e <C-R>=expand("<cword>")<CR><CR>
+nmap  <F11>t  :cs find t <C-R>=expand("<cword>")<CR>
+nmap  <F11>er :cs find c <C-R>=expand("<cword>")<CR><CR>
+nmap  <F11>e  :cs find d <C-R>=expand("<cword>")<CR><CR>
+
+"""" cscope file open
+nmap  <F11>f  :cs find f \/*?<C-R>=expand("<cword>")<CR>\.<CR>
+nmap  <F11>ff :cs find f \/*?<C-R>=expand("<cword>")<CR><CR>
+nmap  <F11>d  :cs find f \/*?<C-R>=expand("<cword>")<CR>*?\/<CR>
+"header file 경우는 별도로 필요없다.
+"nmap  <F11>h  :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+	
     func! FUNC_cscope_create()
-        exe "!echo [cscope will be created, enter to continue]"
-        exe "!$HOME/.vim/mycscope.sh"
+        exe "!echo [cscope will be created, enter to continue, or Ctrl-C]"
+        exe "!$HOME/.vim/mycscope.sh" g:RootDir
     endfunc
-    nmap <LocalLeader>csc :call FUNC_cscope_create()<cr>
 
     func! FUNC_cscope_search()
         let st = expand("<cword>")
-        exe "cs find s ".st
+        exe "cs find g".st
     endfunc
-    nmap  <LocalLeader>css :call FUNC_cscope_search()<cr>
-
-    func! FUNC_cscope_parent()
-        let st = expand("<cword>")
-        exe "cs find p".st
-    endfunc
-    nmap  <LocalLeader>csp :call FUNC_cscope_parent()<cr>
-
-    func! FUNC_cscope_descendant()
-        let st = expand("<cword>")
-        exe "cs find d ".st
-    endfunc
-    nmap  <LocalLeader>csd :call FUNC_cscope_descendant()<cr>
-
-    
 
 "_______________________________________________________________________________
 endif

@@ -136,12 +136,15 @@ SEARCH                                                               *my_find*
 			뒤로 찾기                                ?  pattern     #/(slash)포함문자열 검색시
 		incremental 찾기                             set incsearch  #.vimrc setting으로 해결해야 함
 		특정 dir이하 심볼 찾기                       F3             #grep.vim
-        전체프로젝트 심볼 찾기                       F12 + r        #ctag reference
+        전체프로젝트 심볼 찾기                       F11 + s        #cscope all symbol search
 													 :tag /^symbol$ #regular expression으로 DB 검색
+                                                     F12 + s        #ctag definition symbol search
 		찾은 결과 List                               F12 + l        #ctag list
 		찾은 결과 하나씩 다음 이동                   F12 + 0        #ctag next
 		찾은 결과 하나씩 뒤로 이동                   F12 + 9        #ctag prev
-		caller 찾기                                  <leader>csp    #CScope
+		caller 찾기                                  F11 + u        #CScope parents
+		callee 찾기                                  F11 + d        #CScope desecendant
+		symbol로 file 열기                           F11 + f        #CScope file open
 		
 	바꾸기
 		파일내 문자열 바꾸기	                     :시작,끝 s/old/new/[cgi] #시작=[숫자|.],  끝=[숫자|.|$]
@@ -154,11 +157,12 @@ SEARCH                                                               *my_find*
 
 		dos파일을 unix형식 &trailing space 지우기    <leader> unix
 	symbol 이동
-		심볼정의 바로이동                            F12, CTRL+]
-			현재창 돌아오기                          F11, CTRL+T
+		심볼정의 바로이동                            F11, F12, CTRL+]
+			현재창 돌아오기                          F11 F11, F12 F12, CTRL+T
 		심볼정의 보기및 jump                         F10           #Source Explorer
 			리소스 정의 보기및 jump                
-		심볼 Sync                                    F12 + c       #ctags 생성
+		심볼 Sync for ctags                          F12 + c       #ctags 생성
+		심볼 Sync for cscope                         F11 + c       #cscope 생성
 
 
 WINDOW                                                               *my_win*

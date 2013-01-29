@@ -108,6 +108,8 @@ function vino(){
     VIMINIT=":so ~/.xxx" MYVIMRC=":so ~/.xxx" vi $*
 }
 
+#go file on symbol definition
+alias vis='vi -t'
 
 
 

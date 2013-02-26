@@ -121,6 +121,7 @@ Bundle 'obvious-resize'
 "searching
 Bundle 'ctrlp.vim'
 Bundle 'grep.vim'
+Bundle 'gtags.vim'
 
 "Browsing 
 Bundle 'fugitive.vim'
@@ -701,7 +702,8 @@ nmap <F12>c :call FUNC_ctags_create()<cr>
 nmap <F12><F12> <C-t>
 nmap <F12> <C-]>
 "reference: 현재 cursor의 symbol과 비슷한 symbol defintion 찾기, regexp
-nmap <F12>s :call FUNC_ctags_search()<cr>
+"nmap <F12>s :call FUNC_ctags_search()<cr>
+nmap <F12>s :ltag /^<C-R>=expand("<cword>")<CR>$
 
 "setting for view
 "definition preview in horizontal/vertical/tab 
@@ -709,7 +711,8 @@ nmap <F12>v <C-W><C-]>
 nmap <F12>vv :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
 nmap <F12>vt :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 "이전 검색한 symbol이 jump할수 있는 list보여주기
-nmap <F12>l :ts<cr>
+nmap <F12>7 :lclose<cr>
+nmap <F12>8 :lopen<cr>
 nmap <F12>9 :tp<cr>
 nmap <F12>0 :tn<cr>
 "set tags=tags,TAGS,$PWD/tags,$HOME/.vim/tags
@@ -727,7 +730,7 @@ execute "set tags+=".g:RootDir."/tags"
 
     func! FUNC_ctags_search()
         let st = expand("<cword>")
-        exe "tag /^".st
+        exe "ltag /^".st
     endfunc
 
 endif
@@ -745,31 +748,33 @@ set csprg=/usr/bin/cscope "which cscope"
 "cscope와 ctag를 하나의 key 쓰기=0, 각각 쓰기=1
 set csto=1
 "cst가 설정되면 ctag와 cscope 둘다 search
-set cst
+"set cst
 set cscopequickfix=s-,c-,d-,i-,t-,e-,g-
 set nocsverb
 exe "cs add " . g:RootDir . "/cscope.out" 
 "make verbose
 set csverb
 """" basic operation
-nmap <F11>l :copen<cr>
+nmap <F11>7 :cclose<cr>
+nmap <F11>8 :copen<cr>
 nmap <F11>9 :tp<cr>
 nmap <F11>0 :tn<cr>
 nmap <F11><F11> <C-t>
 
 nmap <F11>hh  :help my_cscope<cr>
-nmap  <F11>c  :call FUNC_cscope_create()<cr>
+nmap <F11>c  :call FUNC_cscope_create()<cr>
 
 """" cscope search
 nmap  <F11>   :call FUNC_cscope_search()<cr>
 "text search
-nmap  <F11>s  :cs find e <C-R>=expand("<cword>")<CR><CR>
-nmap  <F11>t  :cs find t <C-R>=expand("<cword>")<CR>
+"e 경우 앞뒤로 space 한개씩
+nmap  <F11>s  :cs find e /*<C-R>=expand("<cword>")<CR>/* 
+nmap  <F11>t  :cs find t  <C-R>=expand("<cword>")<CR> 
 nmap  <F11>er :cs find c <C-R>=expand("<cword>")<CR><CR>
-nmap  <F11>e  :cs find d <C-R>=expand("<cword>")<CR><CR>
+nmap  <F11>ee :cs find d <C-R>=expand("<cword>")<CR><CR>
 
 """" cscope file open
-nmap  <F11>f  :cs find f \/*?<C-R>=expand("<cword>")<CR>\.<CR>
+nmap  <F11>f  :cs find f \/<C-R>=expand("<cword>")<CR>\.<CR>
 nmap  <F11>ff :cs find f \/*?<C-R>=expand("<cword>")<CR><CR>
 nmap  <F11>d  :cs find f \/*?<C-R>=expand("<cword>")<CR>*?\/<CR>
 "header file 경우는 별도로 필요없다.
@@ -782,7 +787,7 @@ nmap  <F11>d  :cs find f \/*?<C-R>=expand("<cword>")<CR>*?\/<CR>
 
     func! FUNC_cscope_search()
         let st = expand("<cword>")
-        exe "cs find g".st
+        exe "cs find g ".st
     endfunc
 
 "_______________________________________________________________________________
